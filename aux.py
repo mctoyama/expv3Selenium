@@ -6,15 +6,14 @@
 # auxiliary functions for selenium CTs
 
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
-import couchdb
+import selenium.common.exceptions
 
-import time
+import couchdb
 
 # functions that tests login
 def login(driver,url,language,username,passwd,lastName):
@@ -55,7 +54,9 @@ def login(driver,url,language,username,passwd,lastName):
                 if i.text == language:
                     i.click()
                     
-            time.sleep(5)
+            # wait for loading portuguese language
+            path = "//div[2]/span"
+            WebDriverWait(driver, doc['timeout']).until_not(EC.visibility_of_element_located((By.XPATH,path)))
 
         # find the element that's username 
         path = "//div[3]/div/input"
@@ -75,10 +76,28 @@ def login(driver,url,language,username,passwd,lastName):
         inputLoginbutton = driver.find_element_by_xpath(path)
         inputLoginbutton.click()
 
-        # we have to wait for the page to refresh, the last thing that seems to be updated is the user's lastName
-        path = "//td[2]/table/tbody/tr/td[2]/em/button"
-        WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,path),lastName))
+        if lastName is not None:
+            # we have to wait for the page to refresh, the last thing that seems to be updated is the user's lastName
+            path = "//td[2]/table/tbody/tr/td[2]/em/button"
+            WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,path),lastName))
+        else:
+            # check for error in login
+            path = '//div[2]/span'
+            WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,path),u'Usuário e/ou senha incorretos!'))
         
     except Exception as err:
         raise err
+
+# creates web driver for given browser - look at couchdb['config']['webdriver']
+def createWebDriver():
+    
+    server = couchdb.Server()
+    db = server['test']
+    doc = db['config']
+
+    if doc['webdriver'] == u'Firefox':
+        # Create a new instance of the Firefox driver
+        return webdriver.Firefox()
+    else:
+        raise Exception("webdriver not found: "+doc['webdriver'])
 

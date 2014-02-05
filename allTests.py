@@ -3,24 +3,25 @@
 
 # Autor: Marcelo Costa Toyama -mctoyama@gmail.com 2014
 
-from selenium import webdriver
-
 import aux
+import report
 
 import N1_Autenticacao
 
 def main():
 
-    # Create a new instance of the Firefox driver
-    driver = webdriver.Firefox()
+    logger = report.Logger()
 
-    try:
-        N1_Autenticacao.CTV3_1(driver)
+    N1_Autenticacao.CTV3_1(logger)
+    N1_Autenticacao.CTV3_41(logger)
+    N1_Autenticacao.CTV3_43(logger)
+    N1_Autenticacao.CTV3_44(logger)
+    N1_Autenticacao.CTV3_45(logger)
+    N1_Autenticacao.CTV3_46(logger)
+    N1_Autenticacao.CTV3_47(logger)
+    N1_Autenticacao.CTV3_48(logger)
 
-    except Exception as err:
-        print str(err)
-
-    driver.quit()
+    logger.close()
 
 # executs the main script
 if __name__ == "__main__":
