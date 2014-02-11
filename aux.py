@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.keys import Keys
 
 import selenium.common.exceptions
 
@@ -31,15 +32,7 @@ def login(driver,url,language,username,passwd,lastName):
         # waiting for page reload with correct language
         while True:
 
-            path = '//div[3]/label'
-            WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
-            usuarioElement = driver.find_element_by_xpath(path)
-            
-            path = '//div[4]/label'
-            WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
-            senhaElement = driver.find_element_by_xpath(path)
-
-            if usuarioElement.text == u'Usuário:' and senhaElement.text == u'Senha:' :
+            if driver.title == 'Expresso 3.0 - Por favor, insira seus dados de login':
                 break
 
             # choosing language if not portuguese
@@ -47,16 +40,21 @@ def login(driver,url,language,username,passwd,lastName):
             WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
             localeButton = driver.find_element_by_xpath(path)
             localeButton.click()
+
             path = ".x-combo-list-item"
             WebDriverWait(driver, doc['timeout']).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,path)))
             languagesList = driver.find_elements_by_css_selector(path)
             for i in languagesList:
                 if i.text == language:
                     i.click()
-                    
+                    break
+
             # wait for loading portuguese language
             path = "//div[2]/span"
             WebDriverWait(driver, doc['timeout']).until_not(EC.visibility_of_element_located((By.XPATH,path)))
+
+            # waiting for loading portuguese window title
+            WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Por favor, insira seus dados de login'))
 
         # find the element that's username 
         path = "//div[3]/div/input"
@@ -86,7 +84,7 @@ def login(driver,url,language,username,passwd,lastName):
             WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,path),u'Usuário e/ou senha incorretos!'))
         
     except Exception as err:
-        raise err
+       raise err
 
 # creates web driver for given browser - look at couchdb['config']['webdriver']
 def createWebDriver():
@@ -100,4 +98,3 @@ def createWebDriver():
         return webdriver.Firefox()
     else:
         raise Exception("webdriver not found: "+doc['webdriver'])
-

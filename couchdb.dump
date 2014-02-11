@@ -1,11 +1,11 @@
-Content-Type: multipart/mixed; boundary="==aa49a751d7e745389a0642d236a255e9=="
+Content-Type: multipart/mixed; boundary="==1dc3988dde484664a0508e74cd7695c2=="
 
---==aa49a751d7e745389a0642d236a255e9==
+--==1dc3988dde484664a0508e74cd7695c2==
 Content-ID: config
-Content-Length: 231
-Content-MD5: dbPXNZvbluAfR+RoFW5SqA==
+Content-Length: 250
+Content-MD5: 94MTug1btz9/6YVfCaXHpw==
 Content-Type: application/json;charset=utf-8
-ETag: "2-fbf5ea3b224646cb8262ddf89648dfe7"
+ETag: "7-be13f1d4f79678d8600c64f9cf987a99"
 
-{"username": "userTest", "language": "português Brasil [pt_BR]", "url": "https://expressov3.dummy.gov.br", "lastName": "userTestLastname", "_rev": "2-fbf5ea3b224646cb8262ddf89648dfe7", "passwd": "userPasswd", "timeout": 10, "_id": "config"}
---==aa49a751d7e745389a0642d236a255e9==--
+{"username": "username", "webdriver": "Firefox", "language": "português Brasil [pt_BR]", "url": "https://YOUSITE.expresso", "lastName": "Name", "_rev": "7-be13f1d4f79678d8600c64f9cf987a99", "passwd": "YOUPWD", "timeout": 10, "_id": "config"}
+--==1dc3988dde484664a0508e74cd7695c2==--
