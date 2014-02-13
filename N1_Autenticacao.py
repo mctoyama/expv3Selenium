@@ -48,11 +48,8 @@ def CTV3_1(logger):
         logger.save('CTV3_1',"True")
 
     except Exception as err:
-        if type(err) == selenium.common.exceptions.StaleElementReferenceException:
-            driver.close()
-            CTV3_1(logger)
-        else:
-            logger.save('CTV3_1',str(err))
+        logger.save('CTV3_1',str(type(err))+str(err))        
+
     finally:
         driver.quit()
 
@@ -74,11 +71,7 @@ def CTV3_41(logger):
         logger.save('CTV3_41',"True")
         
     except Exception as err:
-        if type(err) == selenium.common.exceptions.StaleElementReferenceException:
-            driver.close()
-            CTV3_41(logger)
-        else:
-            logger.save('CTV3_41',str(err))
+        logger.save('CTV3_41',str(type(err))+str(err))        
     finally:
         driver.quit()
 
@@ -98,11 +91,8 @@ def CTV3_43(logger):
         logger.save('CTV3_43',"True")
         
     except Exception as err:
-        if type(err) == selenium.common.exceptions.StaleElementReferenceException:
-            driver.close()
-            CTV3_43(logger)
-        else:
-            logger.save('CTV3_43',str(err))
+        logger.save('CTV3_43',str(type(err))+str(err))        
+
     finally:
         driver.quit()
 
@@ -122,11 +112,8 @@ def CTV3_44(logger):
         logger.save('CTV3_44',"True")
         
     except Exception as err:
-        if type(err) == selenium.common.exceptions.StaleElementReferenceException:
-            driver.close()
-            CTV3_44(logger)
-        else:
-            logger.save('CTV3_44',str(err))
+        logger.save('CTV3_44',str(type(err))+str(err))        
+
     finally:
         driver.quit()
     
@@ -147,11 +134,8 @@ def CTV3_45(logger):
         logger.save('CTV3_45',"True")
         
     except Exception as err:
-        if type(err) == selenium.common.exceptions.StaleElementReferenceException:
-            driver.close()
-            CTV3_45(logger)
-        else:
-            logger.save('CTV3_45',str(err))
+        logger.save('CTV3_45',str(type(err))+str(err))        
+
     finally:
         driver.quit()
     
@@ -171,11 +155,8 @@ def CTV3_46(logger):
         logger.save('CTV3_46',"True")
         
     except Exception as err:
-        if type(err) == selenium.common.exceptions.StaleElementReferenceException:
-            driver.close()
-            CTV3_46(logger)
-        else:
-            logger.save('CTV3_46',str(err))
+        logger.save('CTV3_46',str(type(err))+str(err))        
+
     finally:
         driver.quit()
     
@@ -196,11 +177,8 @@ def CTV3_47(logger):
         logger.save('CTV3_47',"True")
         
     except Exception as err:
-        if type(err) == selenium.common.exceptions.StaleElementReferenceException:
-            driver.close()
-            CTV3_47(logger)
-        else:
-            logger.save('CTV3_47',str(err))
+        logger.save('CTV3_47',str(type(err))+str(err))        
+
     finally:
         driver.quit()
 
@@ -220,10 +198,7 @@ def CTV3_48(logger):
         logger.save('CTV3_48',"True")
         
     except Exception as err:
-        if type(err) == selenium.common.exceptions.StaleElementReferenceException:
-            driver.close()
-            CTV3_48(logger)
-        else:
-            logger.save('CTV3_48',str(err))
+        logger.save('CTV3_48',str(type(err))+str(err))        
+
     finally:
         driver.quit()
