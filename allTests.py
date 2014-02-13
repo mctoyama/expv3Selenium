@@ -12,14 +12,7 @@ def main():
 
     logger = report.Logger()
 
-    N1_Autenticacao.CTV3_1(logger)
-    N1_Autenticacao.CTV3_41(logger)
-    N1_Autenticacao.CTV3_43(logger)
-    N1_Autenticacao.CTV3_44(logger)
-    N1_Autenticacao.CTV3_45(logger)
-    N1_Autenticacao.CTV3_46(logger)
-    N1_Autenticacao.CTV3_47(logger)
-    N1_Autenticacao.CTV3_48(logger)
+    N1_Autenticacao.allTests(logger)
 
     logger.close()
 

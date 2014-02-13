@@ -20,6 +20,17 @@ import selenium.common.exceptions
 import couchdb
 import aux
 
+# all testes for autenticacao module
+def allTests(logger):
+    CTV3_1(logger)
+    CTV3_41(logger)
+    CTV3_43(logger)
+    CTV3_44(logger)
+    CTV3_45(logger)
+    CTV3_46(logger)
+    CTV3_47(logger)
+    CTV3_48(logger)
+
 # CTV3-1:Logar no sistema com sucesso
 def CTV3_1(logger):
 
