@@ -16,6 +16,7 @@ import selenium.common.exceptions
 
 import couchdb
 
+#############################################################
 # functions that tests login
 def login(driver,url,language,username,passwd,lastName):
 
@@ -86,6 +87,7 @@ def login(driver,url,language,username,passwd,lastName):
     except Exception as err:
        raise err
 
+#############################################################
 # creates web driver for given browser - look at couchdb['config']['webdriver']
 def createWebDriver():
     
@@ -98,3 +100,97 @@ def createWebDriver():
         return webdriver.Firefox()
     else:
         raise Exception("webdriver not found: "+doc['webdriver'])
+
+#############################################################
+# aux 
+def openComposeMailWindow(driver,sendMailDoc):
+
+    server = couchdb.Server()
+    db = server['test']
+    doc = db['config']
+
+    msg = db[sendMailDoc]
+
+    # waiting for main window
+    path = '//td[11]/table/tbody/tr[2]/td[2]/em/button'
+    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+
+    # selecting compor
+    selectPath = '//div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
+    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,selectPath)))
+    selectBtn = driver.find_element_by_xpath(selectPath)
+    selectBtn.click()
+
+    # wait for compor email window
+    windowCompose = driver.window_handles[-1]
+
+    driver.switch_to_window(windowCompose)
+    WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
+
+    # filling TO field
+    toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
+    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
+    toElement = driver.find_element_by_xpath(toPath)
+    toElement.send_keys(msg['TO'])
+
+    selPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/span/img[2]'
+    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,selPath)))
+    selElement = driver.find_element_by_xpath(selPath)
+    selElement.click()
+
+    try:
+        okClass = 'search-item'
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.CLASS_NAME,okClass)))
+        for el in driver.find_elements_by_class_name(okClass):
+            tmp = el.find_element_by_xpath('//b')
+            if tmp.text == msg['TO']:
+                notFound = False
+                tmp.click()
+                break
+
+    except selenium.common.exceptions.TimeoutException as err:
+
+        toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
+        toElement = driver.find_element_by_xpath(toPath)
+        toElement.send_keys(Keys.ENTER)
+
+    # filling subject field
+    subjectPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/input'
+    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
+    subjectElement = driver.find_element_by_xpath(subjectPath)
+    subjectElement.send_keys(msg['SUBJECT'])
+    subjectElement.send_keys(Keys.ENTER)
+
+    # filling email body
+    msgBodyFrame = '//html/body/div/div[2]/div/form/div/div[2]/div/div/div/div/div/div/div/div/div[4]/iframe'
+    driver.switch_to_frame(driver.find_element_by_xpath(msgBodyFrame))
+    msgPath = '//html/body'
+    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,msgPath)))
+    msgEl = driver.find_element_by_xpath(msgPath)
+    msgEl.send_keys(msg['BODY'])
+
+    # clicking send
+    driver.switch_to_default_content()
+
+    sendPath = '//html/body/div[1]/div[2]/div/div[1]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[2]/em/button'
+    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,sendPath)))
+    sendElement = driver.find_element_by_xpath(sendPath)
+    sendElement.click()
+
+    # waiting for closing compose window
+    # selecting main window
+    while True:
+
+        try:
+            WebDriverWait(driver, doc['timeout']).until( lambda driver: windowCompose not in driver.window_handles[-1])
+            break
+            
+        except selenium.common.exceptions.TimeoutException as err:
+            pass
+        
+    driver.switch_to_window(driver.window_handles[-1])
+
+#############################################################
+    
+    

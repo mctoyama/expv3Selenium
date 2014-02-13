@@ -25,3 +25,10 @@ Dump do couchdb
 couchdb-dump http://127.0.0.1:5984/test > couchdb.dump
 
 =============
+
+- fazer um parser para massa de emails enviados
+
+- configurar couchdb database in file
+
+- adicionar o tipo da execção ao log junto com o str(err)
+- diversas exceções não possuem mensagem de erro

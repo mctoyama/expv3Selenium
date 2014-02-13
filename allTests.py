@@ -7,12 +7,14 @@ import aux
 import report
 
 import N1_Autenticacao
+import N4_Mensagens_de_email
 
 def main():
 
     logger = report.Logger()
 
     N1_Autenticacao.allTests(logger)
+    N4_Mensagens_de_email.allTests(logger)
 
     logger.close()
 
