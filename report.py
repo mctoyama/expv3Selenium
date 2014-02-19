@@ -7,6 +7,8 @@ from datetime import datetime, date, time
 
 import couchdb
 
+import configDB
+
 # logger to couchdb
 class Logger:
     def __init__(self):
@@ -16,7 +18,7 @@ class Logger:
         self.reportName = 'report - '+str(now)
 
         self.server = couchdb.Server()
-        self.db = self.server['test']
+        self.db = self.server[configDB.dbname()]
         self.db[self.reportName] = {}
         self.doc = self.db[self.reportName]
 

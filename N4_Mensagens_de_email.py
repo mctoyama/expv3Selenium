@@ -22,6 +22,7 @@ import selenium.common.exceptions
 import couchdb
 import datetime
 
+import configDB
 import aux
 
 #############################################################
@@ -40,11 +41,11 @@ def CTV3_31(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
-        aux.openComposeMailWindow(driver,'CTV3_31_MAIL')
+        aux.openComposeMailWindow(driver,'CTV3_31_param')
         logger.save('CTV3_31','True')        
 
     except Exception as err:
@@ -62,8 +63,8 @@ def CTV3_522(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
 
@@ -165,8 +166,8 @@ def CTV3_7(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
 

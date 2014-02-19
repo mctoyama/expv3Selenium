@@ -1,14 +1,14 @@
-Content-Type: multipart/mixed; boundary="==0a040acc4c454a5c87275ee2af5bb13f=="
+Content-Type: multipart/mixed; boundary="==f5973b46781d4b72887aa7712301119c=="
 
---==0a040acc4c454a5c87275ee2af5bb13f==
-Content-ID: CTV3_31_MAIL
-Content-Length: 181
-Content-MD5: dEOME02doVpmzklNjVi7kg==
+--==f5973b46781d4b72887aa7712301119c==
+Content-ID: CTV3_31_param
+Content-Length: 182
+Content-MD5: NbsWhwqkGrXXVtwYWmILtA==
 Content-Type: application/json
-ETag: "2-39fe41819d903e38b1a84c0cbd4a3c26"
+ETag: "1-e922f14edc8879cdb9b32e5ffbd8b2da"
 
-{"BODY": "Hello world!!! How are you? bye!!!", "TO": "destinatario@expresso.dummy", "_rev": "2-39fe41819d903e38b1a84c0cbd4a3c26", "_id": "CTV3_31_MAIL", "SUBJECT": "CTV3-31 email"}
---==0a040acc4c454a5c87275ee2af5bb13f==
+{"BODY": "Hello world!!! How are you? bye!!!", "TO": "user@dummy", "_rev": "1-e922f14edc8879cdb9b32e5ffbd8b2da", "_id": "CTV3_31_param", "SUBJECT": "CTV3-31 email"}
+--==f5973b46781d4b72887aa7712301119c==
 Content-ID: CTV3_522_param
 Content-Length: 128
 Content-MD5: et7YmyUXNeJwGGd0dPJSmQ==
@@ -16,20 +16,20 @@ Content-Type: application/json
 ETag: "1-56f5a03ff98c6fc0d98bcd28a93cbff5"
 
 {"BODY": "HELLO WORLD!!!", "_rev": "1-56f5a03ff98c6fc0d98bcd28a93cbff5", "_id": "CTV3_522_param", "SUBJECT": "CTV3_522_subject"}
---==0a040acc4c454a5c87275ee2af5bb13f==
+--==f5973b46781d4b72887aa7712301119c==
 Content-ID: CTV3_7_param
 Content-Length: 161
 Content-MD5: ACI2SuD1NhNZinAOge9pvA==
 Content-Type: application/json
 ETag: "1-c87fb09f804dc50af46512681b980e37"
 
-{"BODY": "Hello world!!! bye!!!", "TO": "destinatario@expresso.dummy", "_rev": "1-c87fb09f804dc50af46512681b980e37", "_id": "CTV3_7_param", "SUBJECT": "CTV3_7"}
---==0a040acc4c454a5c87275ee2af5bb13f==
+{"BODY": "Hello world!!! bye!!!", "TO": "user@dummy", "_rev": "1-c87fb09f804dc50af46512681b980e37", "_id": "CTV3_7_param", "SUBJECT": "CTV3_7"}
+--==f5973b46781d4b72887aa7712301119c==
 Content-ID: config
 Content-Length: 250
-Content-MD5: 94MTug1btz9/6YVfCaXHpw==
+Content-MD5: wPk1I4zDNjccKgxkijCduA==
 Content-Type: application/json;charset=utf-8
-ETag: "7-be13f1d4f79678d8600c64f9cf987a99"
+ETag: "8-134e1e443e12a02c292e229324ee909a"
 
-{"username": "username", "webdriver": "Firefox", "language": "português Brasil [pt_BR]", "url": "https://expresso.YOURSITE.COM", "lastName": "lastname", "_rev": "7-be13f1d4f79678d8600c64f9cf987a99", "passwd": "PASSWD", "timeout": 10, "_id": "config"}
---==0a040acc4c454a5c87275ee2af5bb13f==--
+{"username": "user4tests", "webdriver": "Firefox", "language": "português Brasil [pt_BR]", "url": "https://expresso.yousite", "lastName": "lastname", "_rev": "8-134e1e443e12a02c292e229324ee909a", "passwd": "yourpwd", "timeout": 15, "_id": "config"}
+--==f5973b46781d4b72887aa7712301119c==--

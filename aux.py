@@ -16,6 +16,8 @@ import selenium.common.exceptions
 
 import couchdb
 
+import configDB
+
 #############################################################
 # functions that tests login
 def login(driver,url,language,username,passwd,lastName):
@@ -23,8 +25,8 @@ def login(driver,url,language,username,passwd,lastName):
     try:
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
 
         # go to expressov3 home
         driver.get(url)
@@ -88,12 +90,12 @@ def login(driver,url,language,username,passwd,lastName):
        raise err
 
 #############################################################
-# creates web driver for given browser - look at couchdb['config']['webdriver']
+# creates web driver for given browser - look at couchdb[configDB.configDoc()]['webdriver']
 def createWebDriver():
     
     server = couchdb.Server()
-    db = server['test']
-    doc = db['config']
+    db = server[configDB.dbname()]
+    doc = db[configDB.configDoc()]
 
     if doc['webdriver'] == u'Firefox':
         # Create a new instance of the Firefox driver
@@ -106,8 +108,8 @@ def createWebDriver():
 def openComposeMailWindow(driver,sendMailDoc):
 
     server = couchdb.Server()
-    db = server['test']
-    doc = db['config']
+    db = server[configDB.dbname()]
+    doc = db[configDB.configDoc()]
 
     msg = db[sendMailDoc]
 

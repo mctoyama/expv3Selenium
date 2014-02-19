@@ -18,6 +18,8 @@ import selenium.common.exceptions
 # 
 
 import couchdb
+
+import configDB
 import aux
 
 # all testes for autenticacao module
@@ -40,8 +42,8 @@ def CTV3_1(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
 
@@ -63,8 +65,8 @@ def CTV3_41(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username']+"WRONG",doc['passwd'],None)
 
@@ -83,8 +85,8 @@ def CTV3_43(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd']+"WRONG",None)
 
@@ -104,8 +106,8 @@ def CTV3_44(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],'',doc['passwd'],None)
 
@@ -126,8 +128,8 @@ def CTV3_45(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],'',None)
 
@@ -147,8 +149,8 @@ def CTV3_46(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],'      ',doc['passwd'],None)
 
@@ -169,8 +171,8 @@ def CTV3_47(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],'        ',None)
 
@@ -190,8 +192,8 @@ def CTV3_48(logger):
         driver = aux.createWebDriver()
 
         server = couchdb.Server()
-        db = server['test']
-        doc = db['config']
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],u'#9@9&,!9.á;9',doc['passwd'],None)
 
