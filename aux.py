@@ -13,6 +13,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 
 import selenium.common.exceptions
+import selenium.webdriver.firefox.firefox_profile
 
 import couchdb
 
@@ -98,8 +99,29 @@ def createWebDriver():
     doc = db[configDB.configDoc()]
 
     if doc['webdriver'] == u'Firefox':
-        # Create a new instance of the Firefox driver
-        return webdriver.Firefox()
+
+        # Create a new instance of the Firefox profile
+        profile = selenium.webdriver.firefox.firefox_profile.FirefoxProfile();   
+        profile.native_events_enabled = True
+
+        # adding firebug
+        try :
+            profile.add_extension(doc['firebug'])
+            profile.set_preference("extensions.firebug.currentVersion", "1.9.2") #Avoid startup screen
+
+        except KeyError as err:
+            pass
+
+        # adding firexpath
+        try:
+            profile.add_extension(doc['firexpath'])
+
+        except KeyError as err:
+            pass
+
+        # returning driver
+        return webdriver.Firefox(profile)
+
     else:
         raise Exception("webdriver not found: "+doc['webdriver'])
 

@@ -1,6 +1,6 @@
-Content-Type: multipart/mixed; boundary="==f5973b46781d4b72887aa7712301119c=="
+Content-Type: multipart/mixed; boundary="==8e1d67de1f0844c1bd3bdc8126bbf7b8=="
 
---==f5973b46781d4b72887aa7712301119c==
+--==8e1d67de1f0844c1bd3bdc8126bbf7b8==
 Content-ID: CTV3_31_param
 Content-Length: 182
 Content-MD5: NbsWhwqkGrXXVtwYWmILtA==
@@ -8,7 +8,7 @@ Content-Type: application/json
 ETag: "1-e922f14edc8879cdb9b32e5ffbd8b2da"
 
 {"BODY": "Hello world!!! How are you? bye!!!", "TO": "user@dummy", "_rev": "1-e922f14edc8879cdb9b32e5ffbd8b2da", "_id": "CTV3_31_param", "SUBJECT": "CTV3-31 email"}
---==f5973b46781d4b72887aa7712301119c==
+--==8e1d67de1f0844c1bd3bdc8126bbf7b8==
 Content-ID: CTV3_522_param
 Content-Length: 128
 Content-MD5: et7YmyUXNeJwGGd0dPJSmQ==
@@ -16,7 +16,7 @@ Content-Type: application/json
 ETag: "1-56f5a03ff98c6fc0d98bcd28a93cbff5"
 
 {"BODY": "HELLO WORLD!!!", "_rev": "1-56f5a03ff98c6fc0d98bcd28a93cbff5", "_id": "CTV3_522_param", "SUBJECT": "CTV3_522_subject"}
---==f5973b46781d4b72887aa7712301119c==
+--==8e1d67de1f0844c1bd3bdc8126bbf7b8==
 Content-ID: CTV3_7_param
 Content-Length: 161
 Content-MD5: ACI2SuD1NhNZinAOge9pvA==
@@ -24,12 +24,12 @@ Content-Type: application/json
 ETag: "1-c87fb09f804dc50af46512681b980e37"
 
 {"BODY": "Hello world!!! bye!!!", "TO": "user@dummy", "_rev": "1-c87fb09f804dc50af46512681b980e37", "_id": "CTV3_7_param", "SUBJECT": "CTV3_7"}
---==f5973b46781d4b72887aa7712301119c==
+--==8e1d67de1f0844c1bd3bdc8126bbf7b8==
 Content-ID: config
-Content-Length: 250
-Content-MD5: wPk1I4zDNjccKgxkijCduA==
+Content-Length: 476
+Content-MD5: zoZVo2KkGCn0RHLtWtdN4Q==
 Content-Type: application/json;charset=utf-8
-ETag: "8-134e1e443e12a02c292e229324ee909a"
+ETag: "11-4f3c0f7183a6fd1b2747e492da60cd55"
 
-{"username": "user4tests", "webdriver": "Firefox", "language": "português Brasil [pt_BR]", "url": "https://expresso.yousite", "lastName": "lastname", "_rev": "8-134e1e443e12a02c292e229324ee909a", "passwd": "yourpwd", "timeout": 15, "_id": "config"}
---==f5973b46781d4b72887aa7712301119c==--
+{"username": "username", "webdriver": "Firefox", "language": "português Brasil [pt_BR]", "url": "https://expresso.yoursite", "lastName": "lastname", "_rev": "11-4f3c0f7183a6fd1b2747e492da60cd55", "passwd": "passwd", "firebug": "/home/youraccount/firebug@software.joehewitt.com.xpi", "timeout": 15, "firexpath": "/home/youraccount/FireXPath@pierre.tholence.com.xpi", "_id": "config"}
+--==8e1d67de1f0844c1bd3bdc8126bbf7b8==--

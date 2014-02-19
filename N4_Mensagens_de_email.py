@@ -52,7 +52,8 @@ def CTV3_31(logger):
         logger.save('CTV3_31',str(type(err))+str(err))        
 
     finally:
-        driver.quit()
+#        driver.quit()
+        pass
 
 #############################################################
 #CTV3-522:Salvar MENSAGEM rascunho sem destinatário
