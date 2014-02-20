@@ -85,6 +85,8 @@ def CTV3_522(logger):
         selectBtn.click()
 
         # wait for compor email window
+        WebDriverWait(driver, doc['timeout']).until( lambda driver: len(driver.window_handles) == 2 )
+
         windowCompose = driver.window_handles[-1]
 
         driver.switch_to_window(windowCompose)
@@ -119,7 +121,8 @@ def CTV3_522(logger):
 
         # verificando o salvamento - msg na pasta draft
         driver.close()
-        driver.switch_to_window(driver.window_handles[-1])
+
+        driver.switch_to_window(driver.window_handles[0])
 
         # + entrada
         entradaPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/div/img[1]'
@@ -133,22 +136,15 @@ def CTV3_522(logger):
         rascunhoEl.click()
 
         # checking msg subject
-        begin = datetime.datetime.now()
-
-        while True:
-
+        try:
             subjectPath = '//tbody/tr/td[5]/div'
-            WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
-            subjectElen = driver.find_element_by_xpath(subjectPath)
+            WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,subjectPath),msg['SUBJECT']))
         
-            if subjectElen.text == msg['SUBJECT']:
+        except Exception as err:
+            raise Exception('CTV3_522','False - msg not saved in drafts - '+msg['SUBJECT'])
 
-                logger.save('CTV3_522','True')
-                break
+        logger.save('CTV3_522','True')
 
-            elif datetime.datetime.now() > begin + datetime.timedelta(seconds=doc['timeout']):
-
-                raise Exception('CTV3_522','False - msg not saved in drafts - '+subjectElen.text)
 
     except Exception as err:
         logger.save('CTV3_522',str(type(err))+str(err))        
