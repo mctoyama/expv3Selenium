@@ -24,6 +24,7 @@ import datetime
 
 import configDB
 import aux
+import configDB
 
 #############################################################
 # all tests for this module
@@ -52,8 +53,7 @@ def CTV3_31(logger):
         logger.save('CTV3_31',str(type(err))+str(err))        
 
     finally:
-#        driver.quit()
-        pass
+        driver.quit()
 
 #############################################################
 #CTV3-522:Salvar MENSAGEM rascunho sem destinatário
@@ -148,8 +148,7 @@ def CTV3_522(logger):
 
             elif datetime.datetime.now() > begin + datetime.timedelta(seconds=doc['timeout']):
 
-                logger.save('CTV3_522','False - msg not saved in drafts - '+subjectElen.text)
-                break
+                raise Exception('CTV3_522','False - msg not saved in drafts - '+subjectElen.text)
 
     except Exception as err:
         logger.save('CTV3_522',str(type(err))+str(err))        
@@ -188,8 +187,9 @@ def CTV3_7(logger):
         selectBtn.click()
 
         # wait for compor email window
-        windowCompose = driver.window_handles[-1]
+        WebDriverWait(driver, doc['timeout']).until( lambda driver: len(driver.window_handles) == 2 )
 
+        windowCompose = driver.window_handles[-1]
         driver.switch_to_window(windowCompose)
         WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
 
@@ -222,7 +222,10 @@ def CTV3_7(logger):
 
         # verificando o salvamento - msg na pasta draft
         driver.close()
-        driver.switch_to_window(driver.window_handles[-1])
+
+        WebDriverWait(driver, doc['timeout']).until( lambda driver: windowCompose not in driver.window_handles )
+
+        driver.switch_to_window(driver.window_handles[0])
 
         # + entrada
         entradaPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/div/img[1]'
@@ -230,61 +233,49 @@ def CTV3_7(logger):
         entradaEl = driver.find_element_by_xpath(entradaPath)
         entradaEl.click()
 
+        # + rascunho
         rascunhoPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/ul/li[4]/div/a/span'
         WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,rascunhoPath)))
         rascunhoEl = driver.find_element_by_xpath(rascunhoPath)
         rascunhoEl.click()
 
+        # waiting for refresh icon of msg list
+        refreshIconPath = '//td[11]/table'
+
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,refreshIconPath)))
+
+        WebDriverWait(driver, doc['timeout']).until( lambda driver: 'x-item-disabled' not in driver.find_element_by_xpath(refreshIconPath).value_of_css_property('class'))
+
         # checking msg subject
-        begin = datetime.datetime.now()
 
         while True:
 
-            subjectPath = '//tbody/tr/td[5]/div'
-            WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
-            subjectElen = driver.find_element_by_xpath(subjectPath)
-        
-            if subjectElen.text == msg['SUBJECT']:
+            try:
+                subjectPath = '//tbody/tr/td[5]/div'
+                WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,subjectPath),msg['SUBJECT']))
 
                 action = selenium.webdriver.common.action_chains.ActionChains(driver)
-                action.double_click(subjectElen)
+                action.double_click( driver.find_element_by_xpath(subjectPath) )
                 action.perform()
-
                 break
 
-            elif datetime.datetime.now() > begin + datetime.timedelta(seconds=doc['timeout']):
-
-                logger.save('CTV3_7','False - msg not saved in drafts - '+subjectElen.text)
-                break
+            except selenium.common.exceptions.ElementNotVisibleException as err:
+                pass
 
         # switch to compose window
-        begin = datetime.datetime.now()
-
         windowCompose = None
 
-        while True:
+        WebDriverWait(driver, doc['timeout']).until( lambda driver: len(driver.window_handles) == 2 )
+
+        windowCompose = driver.window_handles[-1]
+        driver.switch_to_window(windowCompose)
+        WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
             
-            if datetime.datetime.now() > begin + datetime.timedelta(seconds=doc['timeout']):
-
-                raise Exception('erro de timeout enquanto carrega janela para compor msg')
-
-            elif len(driver.window_handles) == 2:
-
-                windowCompose = driver.window_handles[-1]
-                driver.switch_to_window(windowCompose)
-                WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
-                break
-
         # filling TO field
         toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
         WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
         toElement = driver.find_element_by_xpath(toPath)
         toElement.send_keys(msg['TO'])
-
-        selPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/span/img[2]'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,selPath)))
-        selElement = driver.find_element_by_xpath(selPath)
-        selElement.click()
 
         try:
             okClass = 'search-item'
@@ -292,19 +283,17 @@ def CTV3_7(logger):
             for el in driver.find_elements_by_class_name(okClass):
                 tmp = el.find_element_by_xpath('//b')
                 if tmp.text == msg['TO']:
-                    notFound = False
                     tmp.click()
                     break
 
         except selenium.common.exceptions.TimeoutException as err:
+
             toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
             WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
             toElement = driver.find_element_by_xpath(toPath)
             toElement.send_keys(Keys.ENTER)
 
         # clicking send
-        driver.switch_to_default_content()
-
         sendPath = '//html/body/div[1]/div[2]/div/div[1]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[2]/em/button'
         WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,sendPath)))
         sendElement = driver.find_element_by_xpath(sendPath)
@@ -312,16 +301,9 @@ def CTV3_7(logger):
 
         # waiting for closing compose window
         # selecting main window
-        while True:
-
-            try:
-                WebDriverWait(driver, doc['timeout']).until( lambda driver: windowCompose not in driver.window_handles[-1])
-                break
-            
-            except selenium.common.exceptions.TimeoutException as err:
-                pass
+        WebDriverWait(driver, doc['timeout']).until( lambda driver: windowCompose not in driver.window_handles)
         
-        driver.switch_to_window(driver.window_handles[-1])
+        driver.switch_to_window(driver.window_handles[0])
         logger.save('CTV3_7','True')        
 
     except Exception as err:
