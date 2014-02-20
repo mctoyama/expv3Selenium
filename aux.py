@@ -168,7 +168,6 @@ def openComposeMailWindow(driver,sendMailDoc):
         for el in driver.find_elements_by_class_name(okClass):
             tmp = el.find_element_by_xpath('//b')
             if tmp.text == msg['TO']:
-                notFound = False
                 tmp.click()
                 break
 
