@@ -29,9 +29,32 @@ import configDB
 #############################################################
 # all tests for this module
 def allTests(logger):
+    CTV3_8(logger)
+    CTV3_7(logger)
     CTV3_31(logger)
     CTV3_522(logger)
-    CTV3_7(logger)
+
+#############################################################
+# CTV3-8:Criar Mensagem apenas com To
+def CTV3_8(logger):
+
+    try:
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver()
+
+        server = couchdb.Server()
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
+        
+        aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
+        aux.openComposeMailWindow(driver,'CTV3_8_param')
+        logger.save('CTV3_8','True')        
+
+    except Exception as err:
+        logger.save('CTV3_8',str(type(err))+str(err))        
+
+    finally:
+        driver.quit()
 
 #############################################################
 # CTV3-31:Enviar Mensagens
