@@ -74,13 +74,20 @@ def CTV3_522(logger):
 
         msg = db['CTV3_522_param']
 
-        # waiting for main window
-        path = '//td[11]/table/tbody/tr[2]/td[2]/em/button'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+        try:
+            # waiting for loading list of inbox messages
+            subjectPath = '//tbody/tr/td[5]/div'
+            WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,subjectPath)))
+
+        except selenium.common.exceptions.TimeoutException as err:
+
+            # if there is no message in the list search for "no messages" message
+            subjectPath = '//div/div/div[2]/div/div/div/div/div/div[2]/div/div'
+            WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,subjectPath)))
 
         # selecting compor
         selectPath = '//div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,selectPath)))
+        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,selectPath)))
         selectBtn = driver.find_element_by_xpath(selectPath)
         selectBtn.click()
 
@@ -93,19 +100,24 @@ def CTV3_522(logger):
         WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
 
         # filling subject field
+        subjectContant = msg['SUBJECT'] + str(datetime.datetime.now())
+
         subjectPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/input'
         WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
         subjectElement = driver.find_element_by_xpath(subjectPath)
-        subjectElement.send_keys(msg['SUBJECT'])
+        subjectElement.send_keys(subjectContant)
         subjectElement.send_keys(Keys.ENTER)
 
         # filling email body
-        msgBodyFrame = '//html/body/div/div[2]/div/form/div/div[2]/div/div/div/div/div/div/div/div/div[4]/iframe'
-        driver.switch_to_frame(driver.find_element_by_xpath(msgBodyFrame))
+        msgBodyFrame = 'iframe'
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.TAG_NAME,msgBodyFrame)))
+        driver.switch_to_frame(driver.find_element_by_tag_name(msgBodyFrame))
+
         msgPath = '//html/body'
         WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,msgPath)))
         msgEl = driver.find_element_by_xpath(msgPath)
         msgEl.send_keys(msg['BODY'])
+        msgEl.send_keys(Keys.ENTER)
 
         # click salvar rascunho
         driver.switch_to_default_content()
@@ -124,27 +136,36 @@ def CTV3_522(logger):
 
         driver.switch_to_window(driver.window_handles[0])
 
-        # + entrada
+        # expanding "+ entrada"
         entradaPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/div/img[1]'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,entradaPath)))
+        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,entradaPath)))
         entradaEl = driver.find_element_by_xpath(entradaPath)
         entradaEl.click()
 
+        # expanding "+ rascunho"
         rascunhoPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/ul/li[4]/div/a/span'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,rascunhoPath)))
+        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,rascunhoPath)))
         rascunhoEl = driver.find_element_by_xpath(rascunhoPath)
         rascunhoEl.click()
 
         # checking msg subject
-        try:
-            subjectPath = '//tbody/tr/td[5]/div'
-            WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,subjectPath),msg['SUBJECT']))
-        
-        except Exception as err:
-            raise Exception('CTV3_522','False - msg not saved in drafts - '+msg['SUBJECT'])
+
+        while True:
+
+            try:
+                subjectPath = '//tbody/tr/td[5]/div'
+                WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,subjectPath),msg['SUBJECT']))
+                
+                if subjectContant == driver.find_element_by_xpath(subjectPath).text:
+                    break
+
+            except selenium.common.exceptions.ElementNotVisibleException as err:
+                pass
+
+            except Exception as err:
+                raise Exception('CTV3_522','False - msg not saved in drafts - '+msg['SUBJECT'])
 
         logger.save('CTV3_522','True')
-
 
     except Exception as err:
         logger.save('CTV3_522',str(type(err))+str(err))        
