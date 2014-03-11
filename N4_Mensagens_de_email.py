@@ -24,7 +24,7 @@ import datetime
 
 import configDB
 import aux
-import configDB
+import composeMail
 
 #############################################################
 # all tests for this module
@@ -47,7 +47,13 @@ def CTV3_8(logger):
         doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
-        aux.openComposeMailWindow(driver,'CTV3_8_param')
+
+        window = composeMail.clickCompose(driver,'CTV3_8_param')
+        composeMail.fillTo(driver,'CTV3_8_param')
+        composeMail.fillSubject(driver,'CTV3_8_param')
+        composeMail.fillBody(driver,'CTV3_8_param')
+        composeMail.clickSend(driver,'CTV3_8_param',window)
+
         logger.save('CTV3_8','True')        
 
     except Exception as err:
@@ -69,7 +75,13 @@ def CTV3_31(logger):
         doc = db[configDB.configDoc()]
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
-        aux.openComposeMailWindow(driver,'CTV3_31_param')
+
+        window = composeMail.clickCompose(driver,'CTV3_31_param')
+        composeMail.fillTo(driver,'CTV3_31_param')
+        composeMail.fillSubject(driver,'CTV3_31_param')
+        composeMail.fillBody(driver,'CTV3_31_param')
+        composeMail.clickSend(driver,'CTV3_31_param',window)
+
         logger.save('CTV3_31','True')        
 
     except Exception as err:
@@ -80,6 +92,7 @@ def CTV3_31(logger):
 
 #############################################################
 #CTV3-522:Salvar MENSAGEM rascunho sem destinatário
+
 def CTV3_522(logger):
 
     try:
@@ -89,104 +102,25 @@ def CTV3_522(logger):
         server = couchdb.Server()
         db = server[configDB.dbname()]
         doc = db[configDB.configDoc()]
+
+        msg = db['CTV3_522_param']
         
         aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
 
-        ##########
-        # salvar rascunho
-
-        msg = db['CTV3_522_param']
-
-        try:
-            # waiting for loading list of inbox messages
-            subjectPath = '//tbody/tr/td[5]/div'
-            WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,subjectPath)))
-
-        except selenium.common.exceptions.TimeoutException as err:
-
-            # if there is no message in the list search for "no messages" message
-            subjectPath = '//div/div/div[2]/div/div/div/div/div/div[2]/div/div'
-            WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,subjectPath)))
-
-        # selecting compor
-        selectPath = '//div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,selectPath)))
-        selectBtn = driver.find_element_by_xpath(selectPath)
-        selectBtn.click()
-
-        # wait for compor email window
-        WebDriverWait(driver, doc['timeout']).until( lambda driver: len(driver.window_handles) == 2 )
-
-        windowCompose = driver.window_handles[-1]
-
-        driver.switch_to_window(windowCompose)
-        WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
+        # click compose msg
+        composeMail.clickCompose(driver,'CTV3_522_param')
 
         # filling subject field
-        subjectConstant = msg['SUBJECT'] + str(datetime.datetime.now())
-
-        subjectPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/input'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
-        subjectElement = driver.find_element_by_xpath(subjectPath)
-        subjectElement.send_keys(subjectConstant)
-        subjectElement.send_keys(Keys.ENTER)
+        subjectConstant = composeMail.fillSubject(driver,'CTV3_522_param')
 
         # filling email body
-        msgBodyFrame = 'iframe'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.TAG_NAME,msgBodyFrame)))
-        driver.switch_to_frame(driver.find_element_by_tag_name(msgBodyFrame))
-
-        msgPath = '//html/body'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,msgPath)))
-        msgEl = driver.find_element_by_xpath(msgPath)
-        msgEl.send_keys(msg['BODY'])
-        msgEl.send_keys(Keys.ENTER)
+        composeMail.fillBody(driver,'CTV3_522_param')
 
         # click salvar rascunho
-        driver.switch_to_default_content()
+        composeMail.clickSaveDraft(driver,'CTV3_522_param')
 
-        salvarPath = '//html/body/div[1]/div[2]/div/div[1]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr[1]/td[4]/table/tbody/tr[2]/td[2]/em/button'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,salvarPath)))
-        salvarEl = driver.find_element_by_xpath(salvarPath)
-        salvarEl.click()
-
-        # esperando o salvamento da msg
-        waitPath = '//html/body/div[1]/div[4]/div'
-        WebDriverWait(driver, doc['timeout']).until_not(EC.visibility_of_element_located((By.XPATH,waitPath)))
-
-        # verificando o salvamento - msg na pasta draft
-        driver.close()
-
-        driver.switch_to_window(driver.window_handles[0])
-
-        # expanding "+ entrada"
-        entradaPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/div/img[1]'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,entradaPath)))
-        entradaEl = driver.find_element_by_xpath(entradaPath)
-        entradaEl.click()
-
-        # expanding "+ rascunho"
-        rascunhoPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/ul/li[4]/div/a/span'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,rascunhoPath)))
-        rascunhoEl = driver.find_element_by_xpath(rascunhoPath)
-        rascunhoEl.click()
-
-        # checking msg subject
-
-        while True:
-
-            try:
-                subjectPath = '//tbody/tr/td[5]/div'
-                WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,subjectPath),subjectConstant))
-                
-                if subjectConstant == driver.find_element_by_xpath(subjectPath).text:
-                    break
-
-            except selenium.common.exceptions.ElementNotVisibleException as err:
-                pass
-
-            except Exception as err:
-                raise Exception('CTV3_522','False - msg not saved in drafts - '+msg['SUBJECT'])
+        # checando se a mensagem foi salva na pasta draft
+        composeMail.checkDraftFolderForMessageSubject(driver,'CTV3_522_param',subjectConstant)
 
         logger.save('CTV3_522','True')
 
@@ -213,102 +147,25 @@ def CTV3_7(logger):
 
         msg = db['CTV3_7_param']
 
-        ##########
-        # salvar rascunho
-        try:
-            # waiting for loading list of inbox messages
-            subjectPath = '//tbody/tr/td[5]/div'
-            WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,subjectPath)))
 
-        except selenium.common.exceptions.TimeoutException as err:
+        # clica no botão compor msg e espera a janela abrir
+        composeMail.clickCompose(driver,'CTV3_7_param')
 
-            # if there is no message in the list search for "no messages" message
-            subjectPath = '//div/div/div[2]/div/div/div/div/div/div[2]/div/div'
-            WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,subjectPath)))
+        # preenche campo Subject
+        subjectConstant = composeMail.fillSubject(driver,'CTV3_7_param')
 
-        # selecting compor
-        selectPath = '//div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,selectPath)))
-        selectBtn = driver.find_element_by_xpath(selectPath)
-        selectBtn.click()
-
-        # wait for compor email window
-        WebDriverWait(driver, doc['timeout']).until( lambda driver: len(driver.window_handles) == 2 )
-
-        windowCompose = driver.window_handles[-1]
-
-        driver.switch_to_window(windowCompose)
-        WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
-
-        # filling subject field
-        subjectConstant = msg['SUBJECT'] + str(datetime.datetime.now())
-
-        subjectPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/input'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
-        subjectElement = driver.find_element_by_xpath(subjectPath)
-        subjectElement.send_keys(subjectConstant)
-        subjectElement.send_keys(Keys.ENTER)
-
-        # filling email body
-        msgBodyFrame = 'iframe'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.TAG_NAME,msgBodyFrame)))
-        driver.switch_to_frame(driver.find_element_by_tag_name(msgBodyFrame))
-
-        msgPath = '//html/body'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,msgPath)))
-        msgEl = driver.find_element_by_xpath(msgPath)
-        msgEl.send_keys(msg['BODY'])
-        msgEl.send_keys(Keys.ENTER)
-
+        # preenche campo body
+        composeMail.fillBody(driver,'CTV3_7_param')
+        
         # click salvar rascunho
-        driver.switch_to_default_content()
+        composeMail.clickSaveDraft(driver,'CTV3_7_param')
 
-        salvarPath = '//html/body/div[1]/div[2]/div/div[1]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr[1]/td[4]/table/tbody/tr[2]/td[2]/em/button'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,salvarPath)))
-        salvarEl = driver.find_element_by_xpath(salvarPath)
-        salvarEl.click()
+        # checar mensagem por assunto na pasta draft
+        msgEl = composeMail.checkDraftFolderForMessageSubject(driver,'CTV3_7_param',subjectConstant)
 
-        # esperando o salvamento da msg
-        waitPath = '//html/body/div[1]/div[4]/div'
-        WebDriverWait(driver, doc['timeout']).until_not(EC.visibility_of_element_located((By.XPATH,waitPath)))
-
-        # verificando o salvamento - msg na pasta draft
-        driver.close()
-
-        driver.switch_to_window(driver.window_handles[0])
-
-        # expanding "+ entrada"
-        entradaPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/div/img[1]'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,entradaPath)))
-        entradaEl = driver.find_element_by_xpath(entradaPath)
-        entradaEl.click()
-
-        # expanding "+ rascunho"
-        rascunhoPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/ul/li[4]/div/a/span'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,rascunhoPath)))
-        rascunhoEl = driver.find_element_by_xpath(rascunhoPath)
-        rascunhoEl.click()
-
-        # checking msg subject
-
-        while True:
-
-            try:
-                subjectPath = '//tbody/tr/td[5]/div'
-                WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,subjectPath),subjectConstant))
-                
-                if subjectConstant == driver.find_element_by_xpath(subjectPath).text:
-
-                    action = selenium.webdriver.common.action_chains.ActionChains(driver)
-                    action.double_click( driver.find_element_by_xpath(subjectPath) )
-                    action.perform()
-                    break
-
-            except selenium.common.exceptions.ElementNotVisibleException as err:
-                pass
-
-            except Exception as err:
-                raise Exception('CTV3_522','False - msg not saved in drafts - '+msg['SUBJECT'])
+        action = selenium.webdriver.common.action_chains.ActionChains(driver)
+        action.double_click( msgEl )
+        action.perform()
 
         # switch to compose window
         windowCompose = None
@@ -320,40 +177,11 @@ def CTV3_7(logger):
         WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
             
         # filling TO field
-        toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
-        toElement = driver.find_element_by_xpath(toPath)
-        toElement.send_keys(msg['TO'])
-
-        try:
-            okClass = 'search-item'
-            WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.CLASS_NAME,okClass)))
-            for el in driver.find_elements_by_class_name(okClass):
-                tmp = el.find_element_by_xpath('//b')
-                if tmp.text == msg['TO']:
-                    tmp.click()
-                    break
-
-        except selenium.common.exceptions.TimeoutException as err:
-
-            toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
-            WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
-            toElement = driver.find_element_by_xpath(toPath)
-            toElement.send_keys(Keys.ENTER)
+        composeMail.fillTo(driver,'CTV3_7_param')
 
         # clicking send
-        driver.switch_to_default_content()
+        composeMail.clickSend(driver,'CTV3_7_param',windowCompose)
 
-        sendPath = '//html/body/div[1]/div[2]/div/div[1]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[2]/em/button'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,sendPath)))
-        sendElement = driver.find_element_by_xpath(sendPath)
-        sendElement.click()
-
-        # waiting for closing compose window
-        # selecting main window
-        WebDriverWait(driver, doc['timeout']).until( lambda driver: windowCompose not in driver.window_handles)
-        
-        driver.switch_to_window(driver.window_handles[0])
         logger.save('CTV3_7','True')        
 
     except Exception as err:
