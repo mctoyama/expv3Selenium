@@ -75,10 +75,14 @@ def fillTo(driver,sendMailDoc):
     toElement = driver.find_element_by_xpath(toPath)
     toElement.send_keys(msg['TO'])
 
-    selPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/span/img[2]'
-    WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,selPath)))
-    selElement = driver.find_element_by_xpath(selPath)
-    selElement.click()
+    # checking if search button is clickable
+    findButtonPath = '//html/body/div[10]/div[2]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
+
+    if not EC.element_to_be_clickable((By.XPATH,findButtonPath)):
+        selPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/span/img[2]'
+        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,selPath)))
+        selElement = driver.find_element_by_xpath(selPath)
+        selElement.click()
 
     try:
         okClass = 'search-item'
