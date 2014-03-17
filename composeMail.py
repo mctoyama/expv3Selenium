@@ -371,3 +371,83 @@ def clickDelete(driver,subjectConstant):
         return False
 
 #############################################################
+# opens an msg from Inbox in a new window
+
+def openMessageFromInbox(driver,subjectConstant):
+  
+    server = couchdb.Server()
+    db = server[configDB.dbname()]
+    doc = db[configDB.configDoc()]
+
+    # select inbox
+    selectInbox(driver)
+
+    try:
+
+        zeroMessagesPath = '//html/body/div[2]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/div[1]/div[2]/div/div'
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,zeroMessagesPath)))
+        zeroEl = driver.find_element_by_xpath(zeroMessagesPath)
+
+        if zeroEl.text == 'Nenhum dado para exibir':
+            return False
+
+    except selenium.common.exceptions.TimeoutException as err:
+
+        messageSubjectPath = '//tbody/tr/td[5]/div'
+        WebDriverWait(driver, doc['timeout']).until(EC.presence_of_all_elements_located((By.XPATH,messageSubjectPath)))
+
+        for el in driver.find_elements_by_xpath(messageSubjectPath):
+
+            if el.text == subjectConstant:
+
+                action = selenium.webdriver.common.action_chains.ActionChains(driver)
+                action.double_click( el )
+                action.perform()
+
+                # switch to compose window
+                windowCompose = None
+
+                WebDriverWait(driver, doc['timeout']).until( lambda driver: len(driver.window_handles) == 2 )
+
+                windowCompose = driver.window_handles[-1]
+                driver.switch_to_window(windowCompose)
+                WebDriverWait(driver, doc['timeout']).until(EC.title_contains(subjectConstant))
+
+                return windowCompose
+
+        return None
+    
+#############################################################
+# click delete in opened message
+def clickDeleteInOpenedMessage(driver,window):
+
+    server = couchdb.Server()
+    db = server[configDB.dbname()]
+    doc = db[configDB.configDoc()]
+
+    # clicks delete button
+    deletePath = '//button'
+    WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,deletePath)))    
+    deleteEl = driver.find_element_by_xpath(deletePath)
+    deleteEl.click()
+
+    # confirm delete
+    try:
+        confirmPath = '//div[2]/span'
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,confirmPath)))
+
+        yesPath = '//td/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/em/button'
+        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,yesPath)))
+        yesEl = driver.find_element_by_xpath(yesPath)
+        yesEl.click()
+
+    except selenium.common.exceptions.TimeoutException as err:
+        pass
+
+
+    # waiting for closing message window
+    # selecting main window
+    WebDriverWait(driver, doc['timeout']).until( lambda driver: window not in driver.window_handles)
+    driver.switch_to_window(driver.window_handles[0])
+
+#############################################################
