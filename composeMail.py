@@ -78,7 +78,12 @@ def fillTo(driver,sendMailDoc):
     # checking if search button is clickable
     findButtonPath = '//html/body/div[10]/div[2]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
 
-    if not EC.element_to_be_clickable((By.XPATH,findButtonPath)):
+    # debug
+    try:
+        driver.find_element_by_xpath(findButtonPath)
+
+    except selenium.common.exceptions.NoSuchElementException as err:
+
         selPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/span/img[2]'
         WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,selPath)))
         selElement = driver.find_element_by_xpath(selPath)
@@ -242,5 +247,127 @@ def checkDraftFolderForMessageSubject(driver,sendMailDoc,subjectConstant):
 
 
 #############################################################
+# selects the inbox folder
+
+def selectInbox(driver):
+
+    server = couchdb.Server()
+    db = server[configDB.dbname()]
+    doc = db[configDB.configDoc()]
+
+    # + Inbox
+    plusInboxPath = '//html/body/div/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/ul/div/li/ul/li/div/img'
+    WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,plusInboxPath)))
+    plusEl = driver.find_element_by_xpath(plusInboxPath)
+
+    # checking if is a + or a -
+    cssclass = plusEl.get_attribute('class').split(' ')
+    if 'x-tree-elbow-plus' in cssclass:
+        plusEl.click()
+
+    # click inbox
+    inboxPath = '//html/body/div/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/ul/div/li/ul/li/div/a'
+    WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,inboxPath)))
+    inboxEl = driver.find_element_by_xpath(inboxPath)
+    inboxEl.click()
+
+#############################################################
+# returns a list of all mail subjects in inbox
+
+def listInboxMessagesSubject(driver):
+
+    server = couchdb.Server()
+    db = server[configDB.dbname()]
+    doc = db[configDB.configDoc()]
+
+    # select inbox
+    selectInbox(driver)
+
+    try:
+
+        zeroMessagesPath = '//html/body/div[2]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/div[1]/div[2]/div/div'
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,zeroMessagesPath)))
+        zeroEl = driver.find_element_by_xpath(zeroMessagesPath)
+
+        if zeroEl.text == 'Nenhum dado para exibir':
+            return []
+
+    except selenium.common.exceptions.TimeoutException as err:
+
+        messageSubjectPath = '//tbody/tr/td[5]/div'
+        WebDriverWait(driver, doc['timeout']).until(EC.presence_of_all_elements_located((By.XPATH,messageSubjectPath)))
+
+        ret = []
+
+        for el in driver.find_elements_by_xpath(messageSubjectPath):
+            ret.append( el.text )
+
+        return ret
+
+#############################################################
+# selects an messages in Inbox
+
+def inboxSelectMessage(driver,subject):
+
+    server = couchdb.Server()
+    db = server[configDB.dbname()]
+    doc = db[configDB.configDoc()]
+
+    # select inbox
+    selectInbox(driver)
+
+    try:
+
+        zeroMessagesPath = '//html/body/div[2]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/div[1]/div[2]/div/div'
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,zeroMessagesPath)))
+        zeroEl = driver.find_element_by_xpath(zeroMessagesPath)
+
+        if zeroEl.text == 'Nenhum dado para exibir':
+            return False
+
+    except selenium.common.exceptions.TimeoutException as err:
+
+        messageSubjectPath = '//tbody/tr/td[5]/div'
+        WebDriverWait(driver, doc['timeout']).until(EC.presence_of_all_elements_located((By.XPATH,messageSubjectPath)))
+
+        for el in driver.find_elements_by_xpath(messageSubjectPath):
+            if el.text == subject:
+                el.click()
+                return True
+
+        return False
     
-    
+#############################################################
+# press delete msg button on email module
+
+def clickDelete(driver,subjectConstant):
+
+    server = couchdb.Server()
+    db = server[configDB.dbname()]
+    doc = db[configDB.configDoc()]
+
+    deletePath = '//td[2]/table/tbody/tr[2]/td[2]/em/button'
+    WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,deletePath)))
+    deleteEl = driver.find_element_by_xpath(deletePath)
+    deleteEl.click()
+
+    # must confirme delete
+    try:
+        confirmPath = '//html/body/div[25]/div[2]/div[1]/div/div/div/div/div[2]/span'
+        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,confirmPath)))
+
+        yesPath = '//html/body/div[25]/div[2]/div[2]/div/div/div/div[1]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/em/button'
+        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,yesPath)))
+        yesEl = driver.find_element_by_xpath(yesPath)
+        yesEl.click()
+
+    except selenium.common.exceptions.TimeoutException as err:
+        pass
+
+    # wait for delete to complete    
+    if not subjectConstant in listInboxMessagesSubject(driver):
+        return True
+    else:
+        return False
+
+#############################################################

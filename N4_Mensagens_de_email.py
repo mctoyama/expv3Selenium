@@ -35,6 +35,52 @@ def allTests(logger):
     CTV3_522(logger)
 
 #############################################################
+# CTV3-18:Excluir mensagem selecionada
+def CTV3_18(logger):
+    try:
+
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver()
+
+        server = couchdb.Server()
+        db = server[configDB.dbname()]
+        doc = db[configDB.configDoc()]
+
+        msg = db['CTV3_18_param']
+
+        # login
+        aux.login(driver,doc['url'],doc['language'],doc['username'],doc['passwd'],doc['lastName'])
+
+        # compose mail
+        window = composeMail.clickCompose(driver,'CTV3_18_param')
+        composeMail.fillTo(driver,'CTV3_18_param')
+        subjectConstant = composeMail.fillSubject(driver,'CTV3_18_param')
+        composeMail.fillBody(driver,'CTV3_18_param')
+        composeMail.clickSend(driver,'CTV3_18_param',window)
+
+        # delete mail
+        msgSubjectList = composeMail.listInboxMessagesSubject(driver)
+
+        if subjectConstant in msgSubjectList:
+
+            if composeMail.inboxSelectMessage(driver,subjectConstant):
+                if not composeMail.clickDelete(driver,subjectConstant):
+                    raise Exception('Could not delete message: '+msg['SUBJECT'])
+            else:
+                raise Exception('Could not select the message: '+msg['SUBJECT'])
+
+        else:
+            raise Exception('subject '+msg['SUBJECT']+' is not present in INBOX')
+
+        logger.save('CTV3_18','True')
+
+    except Exception as err:
+        logger.save('CTV3_18',str(type(err))+str(err))        
+
+    finally:
+        driver.quit()
+
+#############################################################
 # CTV3-8:Criar Mensagem apenas com To
 def CTV3_8(logger):
 
