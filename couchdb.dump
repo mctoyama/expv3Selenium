@@ -1,14 +1,22 @@
-Content-Type: multipart/mixed; boundary="==8e1d67de1f0844c1bd3bdc8126bbf7b8=="
+Content-Type: multipart/mixed; boundary="==d13e4097dcb847368a70aa7d01ee4b6e=="
 
---==8e1d67de1f0844c1bd3bdc8126bbf7b8==
+--==d13e4097dcb847368a70aa7d01ee4b6e==
+Content-ID: CTV3_18_param
+Content-Length: 162
+Content-MD5: Y7nEmmIwCxLCLkP+OBUL8w==
+Content-Type: application/json
+ETag: "1-139c1c95aeefda8e7669978fc1d828af"
+
+{"BODY": "HELLO WORLD!!!! BYE!", "TO": "destinatario@yourmail.com", "_rev": "1-139c1c95aeefda8e7669978fc1d828af", "_id": "CTV3_18_param", "SUBJECT": "CTV3_18"}
+--==d13e4097dcb847368a70aa7d01ee4b6e==
 Content-ID: CTV3_31_param
 Content-Length: 182
 Content-MD5: NbsWhwqkGrXXVtwYWmILtA==
 Content-Type: application/json
 ETag: "1-e922f14edc8879cdb9b32e5ffbd8b2da"
 
-{"BODY": "Hello world!!! How are you? bye!!!", "TO": "user@dummy", "_rev": "1-e922f14edc8879cdb9b32e5ffbd8b2da", "_id": "CTV3_31_param", "SUBJECT": "CTV3-31 email"}
---==8e1d67de1f0844c1bd3bdc8126bbf7b8==
+{"BODY": "Hello world!!! How are you? bye!!!", "TO": "destinatario@yourmail.com", "_rev": "1-e922f14edc8879cdb9b32e5ffbd8b2da", "_id": "CTV3_31_param", "SUBJECT": "CTV3-31 email"}
+--==d13e4097dcb847368a70aa7d01ee4b6e==
 Content-ID: CTV3_522_param
 Content-Length: 128
 Content-MD5: et7YmyUXNeJwGGd0dPJSmQ==
@@ -16,20 +24,36 @@ Content-Type: application/json
 ETag: "1-56f5a03ff98c6fc0d98bcd28a93cbff5"
 
 {"BODY": "HELLO WORLD!!!", "_rev": "1-56f5a03ff98c6fc0d98bcd28a93cbff5", "_id": "CTV3_522_param", "SUBJECT": "CTV3_522_subject"}
---==8e1d67de1f0844c1bd3bdc8126bbf7b8==
+--==d13e4097dcb847368a70aa7d01ee4b6e==
 Content-ID: CTV3_7_param
 Content-Length: 161
 Content-MD5: ACI2SuD1NhNZinAOge9pvA==
 Content-Type: application/json
 ETag: "1-c87fb09f804dc50af46512681b980e37"
 
-{"BODY": "Hello world!!! bye!!!", "TO": "user@dummy", "_rev": "1-c87fb09f804dc50af46512681b980e37", "_id": "CTV3_7_param", "SUBJECT": "CTV3_7"}
---==8e1d67de1f0844c1bd3bdc8126bbf7b8==
+{"BODY": "Hello world!!! bye!!!", "TO": "destinatario@yourmail.com", "_rev": "1-c87fb09f804dc50af46512681b980e37", "_id": "CTV3_7_param", "SUBJECT": "CTV3_7"}
+--==d13e4097dcb847368a70aa7d01ee4b6e==
+Content-ID: CTV3_8_param
+Content-Length: 180
+Content-MD5: YXGLRTqPzABVVIAxU8KhGA==
+Content-Type: application/json
+ETag: "1-db46445213893445928da4b22ce3a0d8"
+
+{"BODY": "Hello world!!! How are you? bye!!!", "TO": "destinatario@yourmail.com", "_rev": "1-db46445213893445928da4b22ce3a0d8", "_id": "CTV3_8_param", "SUBJECT": "CTV3-8 email"}
+--==d13e4097dcb847368a70aa7d01ee4b6e==
 Content-ID: config
 Content-Length: 476
 Content-MD5: zoZVo2KkGCn0RHLtWtdN4Q==
 Content-Type: application/json;charset=utf-8
 ETag: "11-4f3c0f7183a6fd1b2747e492da60cd55"
 
-{"username": "username", "webdriver": "Firefox", "language": "português Brasil [pt_BR]", "url": "https://expresso.yoursite", "lastName": "lastname", "_rev": "11-4f3c0f7183a6fd1b2747e492da60cd55", "passwd": "passwd", "firebug": "/home/youraccount/firebug@software.joehewitt.com.xpi", "timeout": 15, "firexpath": "/home/youraccount/FireXPath@pierre.tholence.com.xpi", "_id": "config"}
---==8e1d67de1f0844c1bd3bdc8126bbf7b8==--
+{"username": "username", "webdriver": "Firefox", "language": "português Brasil [pt_BR]", "url": "https://seuexpresso.com", "lastName": "lastName", "_rev": "11-4f3c0f7183a6fd1b2747e492da60cd55", "passwd": "senha", "firebug": "/extensions/firebug@software.joehewitt.com.xpi", "timeout": 15, "firexpath": "/extensions/FireXPath@pierre.tholence.com.xpi", "_id": "config"}
+--==d13e4097dcb847368a70aa7d01ee4b6e==
+Content-ID: report - 2014-03-12 16:22:38.100710
+Content-Length: 244
+Content-MD5: BA6vuVBdnEPjHwRP6bxGLA==
+Content-Type: application/json
+ETag: "8-0c2e7e024a782d408ebcf4e8703ddc22"
+
+{"CTV3_1": "True", "_rev": "8-0c2e7e024a782d408ebcf4e8703ddc22", "start": "2014-03-12 16:22:38.100710", "CTV3_44": "True", "CTV3_45": "True", "CTV3_46": "True", "_id": "report - 2014-03-12 16:22:38.100710", "CTV3_41": "True", "CTV3_43": "True"}
+--==d13e4097dcb847368a70aa7d01ee4b6e==--
