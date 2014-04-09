@@ -6,6 +6,8 @@
 # auxiliary functions for selenium CTs
 
 from selenium import webdriver
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 from selenium.webdriver.common.by import By
@@ -114,8 +116,13 @@ def createWebDriver():
         except KeyError as err:
             pass
 
-        # returning driver
-        return webdriver.Firefox(profile)
+        try:
+            # checking if remote selenium server
+            return RemoteWebDriver(doc['seleniumServer'],DesiredCapabilities.FIREFOX)
+
+        except KeyError as err:
+            # returning local driver
+            return webdriver.Firefox(profile)
 
     else:
         raise Exception("webdriver not found: "+doc['webdriver'])
