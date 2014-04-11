@@ -17,20 +17,12 @@ from selenium.webdriver.common.keys import Keys
 import selenium.common.exceptions
 import selenium.webdriver.firefox.firefox_profile
 
-import couchdb
-
-import configDB
-
 #############################################################
 # functions that tests login
-def login(driver,url,language,username,passwd,lastName):
+def login(mainCfg,driver):
 
-    server = couchdb.Server()
-    db = server[configDB.dbname()]
-    doc = db[configDB.configDoc()]
-    
     # go to expressov3 home
-    driver.get(url)
+    driver.get(mainCfg['url'])
     
     # checking language
     # waiting for page reload with correct language
@@ -41,61 +33,57 @@ def login(driver,url,language,username,passwd,lastName):
 
         # choosing language if not portuguese
         path = "//div/img"
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
         localeButton = driver.find_element_by_xpath(path)
         localeButton.click()
 
         path = ".x-combo-list-item"
-        WebDriverWait(driver, doc['timeout']).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,path)))
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,path)))
         languagesList = driver.find_elements_by_css_selector(path)
         for i in languagesList:
-            if i.text == language:
+            if i.text == mainCfg['language']:
                 i.click()
                 break
 
         # wait for loading portuguese language
         path = "//div[2]/span"
-        WebDriverWait(driver, doc['timeout']).until_not(EC.visibility_of_element_located((By.XPATH,path)))
+        WebDriverWait(driver, mainCfg['timeout']).until_not(EC.visibility_of_element_located((By.XPATH,path)))
 
         # waiting for loading portuguese window title
-        WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Por favor, insira seus dados de login'))
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.title_contains('Por favor, insira seus dados de login'))
 
     # find the element that's username 
     path = "//div[3]/div/input"
-    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
     inputUsername = driver.find_element_by_xpath(path)
-    inputUsername.send_keys(username)
+    inputUsername.send_keys(mainCfg['username'])
     
     # find the element that's password
     path = "//div[4]/div/input"
-    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
     inputUserpasswd = driver.find_element_by_xpath(path)
-    inputUserpasswd.send_keys(passwd)
+    inputUserpasswd.send_keys(mainCfg['passwd'])
     
     # find the element that's login button
     path = "//button"
-    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
     inputLoginbutton = driver.find_element_by_xpath(path)
     inputLoginbutton.click()
 
-    if lastName is not None:
+    if mainCfg['lastName'] is not None:
         # we have to wait for the page to refresh, the last thing that seems to be updated is the user's lastName
         path = "//td[2]/table/tbody/tr/td[2]/em/button"
-        WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,path),lastName))
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,path),mainCfg['lastName']))
     else:
         # check for error in login
         path = '//div[2]/span'
-        WebDriverWait(driver, doc['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,path),u'Usuário e/ou senha incorretos!'))
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.text_to_be_present_in_element((By.XPATH,path),u'Usuário e/ou senha incorretos!'))
 
 #############################################################
-# creates web driver for given browser - look at couchdb[configDB.configDoc()]['webdriver']
-def createWebDriver():
+# creates web driver for given browser
+def createWebDriver(mainCfg):
     
-    server = couchdb.Server()
-    db = server[configDB.dbname()]
-    doc = db[configDB.configDoc()]
-
-    if doc['webdriver'] == u'Firefox':
+    if mainCfg['webdriver'] == u'Firefox':
 
         # Create a new instance of the Firefox profile
         profile = selenium.webdriver.firefox.firefox_profile.FirefoxProfile();   
@@ -103,7 +91,7 @@ def createWebDriver():
 
         # adding firebug
         try :
-            profile.add_extension(doc['firebug'])
+            profile.add_extension(mainCfg['firebug'])
             profile.set_preference("extensions.firebug.currentVersion", "1.9.2") #Avoid startup screen
 
         except KeyError as err:
@@ -111,116 +99,20 @@ def createWebDriver():
 
         # adding firexpath
         try:
-            profile.add_extension(doc['firexpath'])
+            profile.add_extension(mainCfg['firexpath'])
 
         except KeyError as err:
             pass
 
         try:
             # checking if remote selenium server
-            return RemoteWebDriver(doc['seleniumServer'],DesiredCapabilities.FIREFOX)
+            return RemoteWebDriver(mainCfg['seleniumServer'],DesiredCapabilities.FIREFOX)
 
         except KeyError as err:
             # returning local driver
             return webdriver.Firefox(profile)
 
     else:
-        raise Exception("webdriver not found: "+doc['webdriver'])
+        raise Exception("webdriver not found: "+mainCfg['webdriver'])
 
 #############################################################
-# aux 
-def openComposeMailWindow(driver,sendMailDoc):
-
-    server = couchdb.Server()
-    db = server[configDB.dbname()]
-    doc = db[configDB.configDoc()]
-
-    msg = db[sendMailDoc]
-
-    try:
-        # waiting for loading list of inbox messages
-        subjectPath = '//tbody/tr/td[5]/div'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,subjectPath)))
-
-    except selenium.common.exceptions.TimeoutException as err:
-
-        # if there is no message in the list search for "no messages" message
-        subjectPath = '//div/div/div[2]/div/div/div/div/div/div[2]/div/div'
-        WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,subjectPath)))
-
-    # selecting compor
-    selectPath = '//div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
-    WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,selectPath)))
-    selectBtn = driver.find_element_by_xpath(selectPath)
-    selectBtn.click()
-
-    # wait for compor email window
-    WebDriverWait(driver, doc['timeout']).until( lambda driver: len(driver.window_handles) == 2 )
-
-    windowCompose = driver.window_handles[-1]
-
-    driver.switch_to_window(windowCompose)
-    WebDriverWait(driver, doc['timeout']).until(EC.title_contains('Compor mensagem:'))
-
-    # filling TO field
-    toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
-    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
-    toElement = driver.find_element_by_xpath(toPath)
-    toElement.send_keys(msg['TO'])
-
-    selPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/span/img[2]'
-    WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,selPath)))
-    selElement = driver.find_element_by_xpath(selPath)
-    selElement.click()
-
-    try:
-        okClass = 'search-item'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.CLASS_NAME,okClass)))
-        for el in driver.find_elements_by_class_name(okClass):
-            WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,'//b')))
-            tmp = el.find_element_by_xpath('//b')
-            if tmp.text == msg['TO']:
-                tmp.click()
-                break
-
-    except selenium.common.exceptions.TimeoutException as err:
-
-        toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
-        WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
-        toElement = driver.find_element_by_xpath(toPath)
-        toElement.send_keys(Keys.ENTER)
-
-    # filling subject field
-    subjectPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/input'
-    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
-    subjectElement = driver.find_element_by_xpath(subjectPath)
-    subjectElement.send_keys(msg['SUBJECT'])
-    subjectElement.send_keys(Keys.ENTER)
-
-    # filling email body
-    msgBodyFrame = 'iframe'
-    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.TAG_NAME,msgBodyFrame)))
-    driver.switch_to_frame(driver.find_element_by_tag_name(msgBodyFrame))
-
-    msgPath = '//html/body'
-    WebDriverWait(driver, doc['timeout']).until(EC.visibility_of_element_located((By.XPATH,msgPath)))
-    msgEl = driver.find_element_by_xpath(msgPath)
-    msgEl.send_keys(msg['BODY'])
-    msgEl.send_keys(Keys.ENTER)
-
-    # clicking send
-    driver.switch_to_default_content()
-
-    sendPath = '//html/body/div[1]/div[2]/div/div[1]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr[1]/td[1]/table/tbody/tr[2]/td[2]/em/button'
-    WebDriverWait(driver, doc['timeout']).until(EC.element_to_be_clickable((By.XPATH,sendPath)))
-    sendElement = driver.find_element_by_xpath(sendPath)
-    sendElement.click()
-
-    # waiting for closing compose window
-    # selecting main window
-    WebDriverWait(driver, doc['timeout']).until( lambda driver: windowCompose not in driver.window_handles)
-    driver.switch_to_window(driver.window_handles[0])
-
-#############################################################
-    
-    

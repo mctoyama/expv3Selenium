@@ -1,6 +1,14 @@
 *.py[cod]
 *~
+
+# debug file
 debug.py
+
+# exclude html report files
+*.html
+
+# exclude cfg dir
+/cfg/
 
 # C extensions
 *.so

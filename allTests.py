@@ -3,6 +3,7 @@
 
 # Autor: Marcelo Costa Toyama -mctoyama@gmail.com 2014
 
+import cfgDB
 import aux
 import report
 
@@ -11,10 +12,13 @@ import N4_Mensagens_de_email
 
 def main():
 
+    mainCfg = cfgDB.getDict('main.cfg')
+
     logger = report.Logger()
 
-    N1_Autenticacao.allTests(logger)
-    N4_Mensagens_de_email.allTests(logger)
+    N1_Autenticacao.allTests(mainCfg,logger)
+
+    N4_Mensagens_de_email.allTests(mainCfg,logger)
 
     logger.close()
 
