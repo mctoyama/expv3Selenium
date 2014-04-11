@@ -21,3 +21,19 @@ https://comunidadeexpresso.serpro.gov.br/mediawiki/index.php/Arquivo:CTV3_test_s
 
 =============
 
+How to use
+
+edit files in ./cfg/ dir for testes parameters.
+and example is in file ./sampleCfg/
+
+Use 'python cfgDB.py' for editing.
+
+-- ** -- 
+mv sampleCfg cfg
+python cfgDB.py main.cfg
+-- ** --
+
+Do this for all files in ./cfg/ dir
+
+=============
+
