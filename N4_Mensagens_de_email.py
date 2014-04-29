@@ -30,6 +30,7 @@ import composeMail
 def allTests(mainCfg,logger):
     CTV3_7(mainCfg,logger)
     CTV3_8(mainCfg,logger)
+    CTV3_11(mainCfg,logger)
     CTV3_18(mainCfg,logger)
     CTV3_20(mainCfg,logger)
     CTV3_31(mainCfg,logger)
@@ -114,6 +115,29 @@ def CTV3_8(mainCfg,logger):
 
     finally:
         driver.quit()
+
+#############################################################
+# CTV3-11:Criar Mensagem apenas com Cc
+def CTV3_11(mainCfg,logger):
+
+    try:
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver(mainCfg)
+        aux.login(mainCfg,driver)
+        window = composeMail.clickCompose(mainCfg,driver,'CTV3_11_param')
+        composeMail.fillToOption(mainCfg,driver,'CTV3_11_param','Cc')
+        composeMail.fillSubject(mainCfg,driver,'CTV3_11_param')
+        composeMail.fillBody(mainCfg,driver,'CTV3_11_param')
+        composeMail.clickSend(mainCfg,driver,'CTV3_11_param',window)
+
+        logger.save('CTV3_11','Criar Mensagem apenas com Cc','True') 
+
+    except Exception as err:
+        logger.save('CTV3_11','Criar Mensagem apenas com Cc',str(type(err))+str(err))        
+
+    finally:
+        driver.quit()
+
 #############################################################
 # CTV3-18:Excluir mensagem selecionada
 def CTV3_18(mainCfg,logger):

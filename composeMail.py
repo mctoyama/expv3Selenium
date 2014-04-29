@@ -68,7 +68,7 @@ def fillTo(mainCfg,driver,sendMailDoc):
     # checking if search button is clickable
     findButtonPath = '//html/body/div[10]/div[2]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
 
-    # debug
+    # checking for combobox
     try:
         driver.find_element_by_xpath(findButtonPath)
 
@@ -96,6 +96,74 @@ def fillTo(mainCfg,driver,sendMailDoc):
         toElement = driver.find_element_by_xpath(toPath)
         toElement.send_keys(Keys.ENTER)
 
+#############################################################
+# preenche campo To, Cc ou Cco
+def fillToOption(mainCfg,driver,sendMailDoc,toOption):
+
+    msg = cfgDB.getDict(sendMailDoc)
+    toOptionText = str(toOption) + ':'
+
+    # Find web element that receive the options to select: 'Para:', 'Cc:' or 'Cco:'
+    path = 'html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/div/table/tbody/tr/td[1]/div/div/div'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+    optionButton = driver.find_element_by_xpath(path)
+    optionButton.click()
+
+    # click in the arrow button
+    path = '//div[3]/div/img'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,path)))
+    optionButton = driver.find_element_by_xpath(path)
+    optionButton.click()
+
+    # Find web element with all the options
+    # Find the option selected
+    path = ".x-combo-list-item"
+    toOptions = driver.find_elements_by_css_selector(path)
+    for i in toOptions:
+        if i.text == toOptionText:
+            i.click()
+            break
+
+    # filling CC field
+    toPath = 'html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/div/table/tbody/tr/td[2]/div'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
+    toElement = driver.find_element_by_xpath(toPath)
+    toElement.click()
+    toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
+    toInput = driver.find_element_by_xpath(toPath)
+    toInput.send_keys(msg[toOption])
+
+    # checking if search button is clickable
+    findButtonPath = '//html/body/div[10]/div[2]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
+
+    # checking for combobox
+    try:
+        driver.find_element_by_xpath(findButtonPath)
+
+    except selenium.common.exceptions.NoSuchElementException as err:
+
+        selPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/span/img[2]'
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,selPath)))
+        selElement = driver.find_element_by_xpath(selPath)
+        selElement.click()
+
+    try:
+        okClass = 'search-item'
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.CLASS_NAME,okClass)))
+        for el in driver.find_elements_by_class_name(okClass):
+            WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,'//b')))
+            tmp = el.find_element_by_xpath('//b')
+            if tmp.text == toOptionText:
+                tmp.click()
+                break
+
+    except selenium.common.exceptions.TimeoutException as err:
+
+        toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
+        toElement = driver.find_element_by_xpath(toPath)
+        toElement.send_keys(Keys.ENTER)
 
 
 #############################################################
