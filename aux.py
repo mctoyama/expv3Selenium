@@ -82,11 +82,10 @@ def login(mainCfg,driver):
 #############################################################
 # creates web driver for given browser
 def createWebDriver(mainCfg):
-    
     if mainCfg['webdriver'] == u'Firefox':
 
         # Create a new instance of the Firefox profile
-        profile = selenium.webdriver.firefox.firefox_profile.FirefoxProfile();   
+        profile = selenium.webdriver.firefox.firefox_profile.FirefoxProfile();
         profile.native_events_enabled = True
 
         # adding firebug
@@ -115,4 +114,25 @@ def createWebDriver(mainCfg):
     else:
         raise Exception("webdriver not found: "+mainCfg['webdriver'])
 
-#############################################################
+#######################################################################################
+# function that provide access to a Module of ExpressoV3 given its identification text
+def accessModule(mainCfg,driver,moduleIDText):
+    # Wait for span (with the access to the modules of ExpressoV3) to be clickable
+    modulesOptionPath = 'html/body/div[1]/div[3]/div/div/div/div[3]/div/div/div/div[1]/div[1]/ul/li[1]/a[2]/em/span'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,modulesOptionPath)))
+    driver.find_element_by_xpath(modulesOptionPath).click()
+
+    # Find the menu with the options
+#    modulesMenuPath = '//html/body/div[27]/ul/div/div[1]'
+    modulesMenuPath = '//ul/div/div/ul'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,modulesMenuPath)))
+    modulesMenu = driver.find_element_by_xpath(modulesMenuPath)
+
+    print moduleIDText
+    # Click in the option of the informed module
+    modulesMenu.find_element_by_xpath("//span[contains(@class,'x-menu-item-text') and contains(text(),'" + moduleIDText + "')]").click()
+
+    # wait for the window of the informed module
+    modulekWindowPath = "//span[contains(@class,'x-tab-strip-text') and contains(text(),'" + moduleIDText + "')]"
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,modulekWindowPath)))
+
