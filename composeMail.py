@@ -219,24 +219,9 @@ def clickSaveDraft(mainCfg,driver,sendMailDoc):
 # retorna o elemento caso sucesso
 # throws exception em caso de erro
 
-def checkDraftFolderForMessageSubject(mainCfg,driver,sendMailDoc,subjectConstant):
-
-    msg = cfgDB.getDict(sendMailDoc)
-
-    # expanding "+ entrada"
-    entradaPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/div/img[1]'
-    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,entradaPath)))
-    entradaEl = driver.find_element_by_xpath(entradaPath)
-    entradaEl.click()
-
-        # expanding "+ rascunho"
-    rascunhoPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div[1]/div[2]/div[2]/div/ul/div/li/ul/li[1]/ul/li[4]/div/a/span'
-    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,rascunhoPath)))
-    rascunhoEl = driver.find_element_by_xpath(rascunhoPath)
-    rascunhoEl.click()
+def elementInFolder(mainCfg,driver,subjectConstant):
 
     # checking msg subject
-
     while True:
 
         try:

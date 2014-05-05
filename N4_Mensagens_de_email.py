@@ -63,7 +63,8 @@ def CTV3_7(mainCfg,logger):
         composeMail.clickSaveDraft(mainCfg,driver,'CTV3_7_param')
 
         # checar mensagem por assunto na pasta draft
-        msgEl = composeMail.checkDraftFolderForMessageSubject(mainCfg,driver,'CTV3_7_param',subjectConstant)
+        composeMail.clickFolder(mainCfg,driver,"Rascunhos")
+        msgEl = composeMail.elementInFolder(mainCfg,driver,subjectConstant)
 
         action = selenium.webdriver.common.action_chains.ActionChains(driver)
         action.double_click( msgEl )
@@ -309,7 +310,8 @@ def CTV3_522(mainCfg,logger):
         composeMail.clickSaveDraft(mainCfg,driver,'CTV3_522_param')
 
         # checando se a mensagem foi salva na pasta draft
-        composeMail.checkDraftFolderForMessageSubject(mainCfg,driver,'CTV3_522_param',subjectConstant)
+        composeMail.clickFolder(mainCfg,driver,"Rascunhos")
+        composeMail.elementInFolder(mainCfg,driver,subjectConstant)
 
         logger.save(u'CTV3_522',u'Salvar MENSAGEM rascunho sem destinatário',u'True')
 
