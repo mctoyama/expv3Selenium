@@ -79,7 +79,7 @@ def CTV3_7(mainCfg,logger):
         WebDriverWait(driver, mainCfg['timeout']).until(EC.title_contains('Compor mensagem:'))
             
         # filling TO field
-        composeMail.fillTo(mainCfg,driver,'CTV3_7_param')
+        composeMail.fillToOption(mainCfg,driver,'CTV3_7_param','TO')
 
         # clicking send
         composeMail.clickSend(mainCfg,driver,'CTV3_7_param',windowCompose)
@@ -104,7 +104,7 @@ def CTV3_8(mainCfg,logger):
         aux.login(mainCfg,driver)
 
         window = composeMail.clickCompose(mainCfg,driver,'CTV3_8_param')
-        composeMail.fillTo(mainCfg,driver,'CTV3_8_param')
+        composeMail.fillToOption(mainCfg,driver,'CTV3_8_param',"TO")
         composeMail.fillSubject(mainCfg,driver,'CTV3_8_param')
         composeMail.fillBody(mainCfg,driver,'CTV3_8_param')
         composeMail.clickSend(mainCfg,driver,'CTV3_8_param',window)
@@ -154,7 +154,7 @@ def CTV3_18(mainCfg,logger):
 
         # compose mail
         window = composeMail.clickCompose(mainCfg,driver,'CTV3_18_param')
-        composeMail.fillTo(mainCfg,driver,'CTV3_18_param')
+        composeMail.fillToOption(mainCfg,driver,'CTV3_18_param',"TO")
         subjectConstant = composeMail.fillSubject(mainCfg,driver,'CTV3_18_param')
         composeMail.fillBody(mainCfg,driver,'CTV3_18_param')
         composeMail.clickSend(mainCfg,driver,'CTV3_18_param',window)
@@ -200,7 +200,7 @@ def CTV3_20(mainCfg,logger):
 
         # compose mail
         window = composeMail.clickCompose(mainCfg,driver,'CTV3_20_param')
-        composeMail.fillTo(mainCfg,driver,'CTV3_20_param')
+        composeMail.fillToOption(mainCfg,driver,'CTV3_20_param',"TO")
         subjectConstant = composeMail.fillSubject(mainCfg,driver,'CTV3_20_param')
         composeMail.fillBody(mainCfg,driver,'CTV3_20_param')
         composeMail.clickSend(mainCfg,driver,'CTV3_20_param',window)
@@ -240,7 +240,7 @@ def CTV3_31(mainCfg,logger):
         aux.login(mainCfg,driver)
 
         window = composeMail.clickCompose(mainCfg,driver,'CTV3_31_param')
-        composeMail.fillTo(mainCfg,driver,'CTV3_31_param')
+        composeMail.fillToOption(mainCfg,driver,'CTV3_31_param',"TO")
         composeMail.fillSubject(mainCfg,driver,'CTV3_31_param')
         composeMail.fillBody(mainCfg,driver,'CTV3_31_param')
         composeMail.clickSend(mainCfg,driver,'CTV3_31_param',window)

@@ -128,7 +128,6 @@ def accessModule(mainCfg,driver,moduleIDText):
     WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,modulesMenuPath)))
     modulesMenu = driver.find_element_by_xpath(modulesMenuPath)
 
-    print moduleIDText
     # Click in the option of the informed module
     modulesMenu.find_element_by_xpath("//span[contains(@class,'x-menu-item-text') and contains(text(),'" + moduleIDText + "')]").click()
 
