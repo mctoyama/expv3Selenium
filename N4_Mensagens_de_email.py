@@ -34,6 +34,7 @@ def allTests(mainCfg,logger):
     CTV3_18(mainCfg,logger)
     CTV3_20(mainCfg,logger)
     CTV3_31(mainCfg,logger)
+    CTV3_506(mainCfg,logger)
     CTV3_522(mainCfg,logger)
 
 #############################################################
@@ -159,7 +160,8 @@ def CTV3_18(mainCfg,logger):
         composeMail.clickSend(mainCfg,driver,'CTV3_18_param',window)
 
         # delete mail
-        msgSubjectList = composeMail.listInboxMessagesSubject(mainCfg,driver)
+        composeMail.clickFolder(mainCfg,driver,"Entrada")
+        msgSubjectList = composeMail.listFolderMessagesSubject(mainCfg,driver)
 
         if subjectConstant in msgSubjectList:
 
@@ -204,7 +206,8 @@ def CTV3_20(mainCfg,logger):
         composeMail.clickSend(mainCfg,driver,'CTV3_20_param',window)
 
         # delete mail
-        msgSubjectList = composeMail.listInboxMessagesSubject(mainCfg,driver)
+        composeMail.clickFolder(mainCfg,driver,"Entrada")
+        msgSubjectList = composeMail.listFolderMessagesSubject(mainCfg,driver)
 
         if subjectConstant in msgSubjectList:
 
@@ -247,6 +250,36 @@ def CTV3_31(mainCfg,logger):
     except Exception as err:
         logger.save('CTV3_31','Enviar Mensagens',str(type(err))+str(err))
 
+    finally:
+        driver.quit()
+#############################################################
+#CTV3-506:Excluir todas as mensagens de uma pasta
+def CTV3_506(mainCfg,logger):
+    try:
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver(mainCfg)
+
+        msg = cfgDB.getDict('CTV3_506_param')
+        
+        aux.login(mainCfg,driver)
+
+        # opening folder
+        composeMail.clickFolder(mainCfg,driver,msg['folderName'])
+
+        # the accont must hae at least one message for deletion
+        if len(composeMail.listFolderMessagesSubject(mainCfg,driver)) == 0:
+            raise Exception('Must have at least one message for deletion!')
+
+        # selecting all from page
+        composeMail.selectAllFromPage(mainCfg,driver)
+
+        if not composeMail.clickDelete(mainCfg,driver,None):
+            raise Exception('Could not delete page')
+
+        logger.save(u'CTV3_506',u'Excluir todas as mensagens de uma pasta',u'True')
+
+    except Exception as err:
+        logger.save('CTV3_506','Excluir todas as mensagens de uma pasta',str(type(err))+str(err))        
     finally:
         driver.quit()
 

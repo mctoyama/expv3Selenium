@@ -15,7 +15,9 @@ from selenium.webdriver.common.keys import Keys
 import selenium.common.exceptions
 
 import cfgDB
+
 import datetime
+import time
 
 #############################################################
 # clica no botão compor msg e espera a janela abrir
@@ -285,41 +287,17 @@ def checkDraftFolderForMessageSubject(mainCfg,driver,sendMailDoc,subjectConstant
 
 
 #############################################################
-# selects the inbox folder
-
-def selectInbox(mainCfg,driver):
-
-    # + Inbox
-    plusInboxPath = '//html/body/div/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/ul/div/li/ul/li/div/img'
-    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,plusInboxPath)))
-    plusEl = driver.find_element_by_xpath(plusInboxPath)
-
-    # checking if is a + or a -
-    cssclass = plusEl.get_attribute('class').split(' ')
-    if 'x-tree-elbow-plus' in cssclass:
-        plusEl.click()
-
-    # click inbox
-    inboxPath = '//html/body/div/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/ul/div/li/ul/li/div/a'
-    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,inboxPath)))
-    inboxEl = driver.find_element_by_xpath(inboxPath)
-    inboxEl.click()
-
-#############################################################
 # returns a list of all mail subjects in inbox
 
-def listInboxMessagesSubject(mainCfg,driver):
-
-    # select inbox
-    selectInbox(mainCfg,driver)
+def listFolderMessagesSubject(mainCfg,driver):
 
     try:
 
         zeroMessagesPath = '//html/body/div[2]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/div[1]/div[2]/div/div'
-        WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,zeroMessagesPath)))
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,zeroMessagesPath)))
         zeroEl = driver.find_element_by_xpath(zeroMessagesPath)
 
-        if zeroEl.text == 'Nenhum dado para exibir':
+        if zeroEl.text == u'Nenhum dado para exibir':
             return []
 
     except selenium.common.exceptions.TimeoutException as err:
@@ -330,9 +308,31 @@ def listInboxMessagesSubject(mainCfg,driver):
         ret = []
 
         for el in driver.find_elements_by_xpath(messageSubjectPath):
-            ret.append( el.text )
+            if el.text != u'':
+                ret.append( el.text )
 
         return ret
+
+#############################################################
+# waits to load messagens in folder
+
+def waitMessageInFolder(mainCfg,driver):
+
+    try:
+
+        zeroMessagesPath = '//html/body/div[2]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/div[1]/div[2]/div/div'
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,zeroMessagesPath)))
+        zeroEl = driver.find_element_by_xpath(zeroMessagesPath)
+
+        if zeroEl.text == 'Nenhum dado para exibir':
+            return True
+
+    except selenium.common.exceptions.TimeoutException as err:
+
+        messageSubjectPath = '//tbody/tr/td[5]/div'
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_all_elements_located((By.XPATH,messageSubjectPath)))
+
+        return True
 
 #############################################################
 # selects an messages in Inbox
@@ -340,7 +340,7 @@ def listInboxMessagesSubject(mainCfg,driver):
 def inboxSelectMessage(mainCfg,driver,subject):
 
     # select inbox
-    selectInbox(mainCfg,driver)
+    clickFolder(mainCfg,driver,"Entrada")
 
     try:
 
@@ -368,6 +368,12 @@ def inboxSelectMessage(mainCfg,driver,subject):
 
 def clickDelete(mainCfg,driver,subjectConstant):
 
+    subjList = []
+
+    if subjectConstant is None:
+        subjList = listFolderMessagesSubject(mainCfg,driver)
+
+    # delete in toolbar
     deletePath = '//td[2]/table/tbody/tr[2]/td[2]/em/button'
     WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,deletePath)))
     deleteEl = driver.find_element_by_xpath(deletePath)
@@ -375,10 +381,10 @@ def clickDelete(mainCfg,driver,subjectConstant):
 
     # must confirme delete
     try:
-        confirmPath = '//html/body/div[25]/div[2]/div[1]/div/div/div/div/div[2]/span'
+ 	confirmPath = '//div[2]/span'
         WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,confirmPath)))
 
-        yesPath = '//html/body/div[25]/div[2]/div[2]/div/div/div/div[1]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/em/button'
+ 	yesPath = '//div[2]/div/div/div/div/table/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/em/button'
         WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,yesPath)))
         yesEl = driver.find_element_by_xpath(yesPath)
         yesEl.click()
@@ -387,10 +393,10 @@ def clickDelete(mainCfg,driver,subjectConstant):
         pass
 
     # wait for delete to complete    
-    if not subjectConstant in listInboxMessagesSubject(mainCfg,driver):
-        return True
+    if subjectConstant is not None:
+        return subjectConstant not in listFolderMessagesSubject(mainCfg,driver)
     else:
-        return False
+        return set(subjList) != set(listFolderMessagesSubject(mainCfg,driver))
 
 #############################################################
 # opens an msg from Inbox in a new window
@@ -398,7 +404,7 @@ def clickDelete(mainCfg,driver,subjectConstant):
 def openMessageFromInbox(mainCfg,driver,subjectConstant):
   
     # select inbox
-    selectInbox(mainCfg,driver)
+    clickFolder(mainCfg,driver,"Entrada")
 
     try:
 
@@ -463,5 +469,67 @@ def clickDeleteInOpenedMessage(mainCfg,driver,window):
     # selecting main window
     WebDriverWait(driver, mainCfg['timeout']).until( lambda driver: window not in driver.window_handles)
     driver.switch_to_window(driver.window_handles[0])
+
+#############################################################
+# click on a given folder
+def clickFolder(mainCfg,driver,folderName):
+
+    # + Inbox
+    plusInboxPath = '//html/body/div/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div/div/div/div/div/div[2]/div[2]/div/ul/div/li/ul/li/div/img'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,plusInboxPath)))
+    plusEl = driver.find_element_by_xpath(plusInboxPath)
+
+    # checking if is a + or a -
+    cssclass = plusEl.get_attribute('class').split(' ')
+    if 'x-tree-elbow-plus' in cssclass:
+        plusEl.click()
+
+    # click folder
+    folderPath = '//ul/li/div/a/span'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_all_elements_located((By.XPATH,folderPath)))
+
+    for el in driver.find_elements_by_xpath(folderPath):
+        if el.text == folderName:
+            el.click()
+            break
+
+    # wait until messages finish loading
+    waitMessageInFolder(mainCfg,driver)
+
+#############################################################
+# select all msgs from 1st page
+def selectAllFromPage(mainCfg,driver):
+
+    # combo for selecting all msgs
+    comboSelCSS = ".x-ux-pagingtb-main"
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.CSS_SELECTOR,comboSelCSS)))
+    selectComboEl = driver.find_element_by_css_selector(comboSelCSS)
+    selectComboEl.click()
+
+    # unselect all
+    deselectCSS = ".x-ux-pagingtb-deselect"
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.CSS_SELECTOR,deselectCSS)))
+    deselectEl = driver.find_element_by_css_selector(deselectCSS)
+    deselectEl.click()
+
+    # combo for selecting all msgs
+    # time.sleep is necessary because there is no significant changes in the interface after unselect all
+    # since there is not data send to server, only browser updates 1 sec is enough
+    time.sleep(1) 
+
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.CSS_SELECTOR,comboSelCSS)))
+    selectComboEl = driver.find_element_by_css_selector(comboSelCSS)
+    selectComboEl.click()
+
+    # revert selection
+    toggleCSS = ".x-ux-pagingtb-toggle"
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.CSS_SELECTOR,toggleCSS)))
+    toggleEl = driver.find_element_by_css_selector(toggleCSS)
+    toggleEl.click()
+
+    # combo for selecting all msgs
+    # time.sleep is necessary because there is no significant changes in the interface after unselect all
+    # since there is not data send to server, only browser updates 1 sec is enough
+    time.sleep(1) 
 
 #############################################################

@@ -145,7 +145,7 @@ def main():
                 tag = raw_input().decode(sys.stdin.encoding)
                 try:
                     del record.reg[tag]
-                    record.update
+                    record.update()
                 except KeyError as err:
                     pass
         else:
