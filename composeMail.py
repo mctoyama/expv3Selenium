@@ -289,10 +289,7 @@ def waitMessageInFolder(mainCfg,driver):
 #############################################################
 # selects an messages in Inbox
 
-def inboxSelectMessage(mainCfg,driver,subject):
-
-    # select inbox
-    clickFolder(mainCfg,driver,"Entrada")
+def selectMessageInFolder(mainCfg,driver,subject):
 
     try:
 
@@ -352,8 +349,6 @@ def clickDelete(mainCfg,driver,subjectConstant):
 
 #############################################################
 # opens an msg from Inbox in a new window
-
-#def openMessageFromInbox(mainCfg,driver,subjectConstant):
 
 def openMessageInFolder(mainCfg,driver,subjectConstant):
   

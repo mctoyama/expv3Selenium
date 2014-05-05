@@ -165,8 +165,8 @@ def CTV3_18(mainCfg,logger):
         msgSubjectList = composeMail.listFolderMessagesSubject(mainCfg,driver)
 
         if subjectConstant in msgSubjectList:
-
-            if composeMail.inboxSelectMessage(mainCfg,driver,subjectConstant):
+            
+            if composeMail.selectMessageInFolder(mainCfg,driver,subjectConstant):
                 if not composeMail.clickDelete(mainCfg,driver,subjectConstant):
                     raise Exception('Could not delete message: '+msg['SUBJECT'])
             else:
