@@ -353,11 +353,10 @@ def clickDelete(mainCfg,driver,subjectConstant):
 #############################################################
 # opens an msg from Inbox in a new window
 
-def openMessageFromInbox(mainCfg,driver,subjectConstant):
-  
-    # select inbox
-    clickFolder(mainCfg,driver,"Entrada")
+#def openMessageFromInbox(mainCfg,driver,subjectConstant):
 
+def openMessageInFolder(mainCfg,driver,subjectConstant):
+  
     try:
 
         zeroMessagesPath = '//html/body/div[2]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/div[1]/div[2]/div/div'

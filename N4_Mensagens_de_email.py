@@ -213,7 +213,7 @@ def CTV3_20(mainCfg,logger):
         if subjectConstant in msgSubjectList:
 
             # open msg in new window
-            window = composeMail.openMessageFromInbox(mainCfg,driver,subjectConstant)
+            window = composeMail.openMessageInFolder(mainCfg,driver,subjectConstant)
 
             if window is None:
                 raise Exception('Could not open message: '+msg['SUBJECT'])
