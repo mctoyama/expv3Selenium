@@ -23,7 +23,7 @@ import datetime
 
 import cfgDB
 import aux
-import composeMail
+import expressomailModule
 
 #############################################################
 # all tests for this module
@@ -51,20 +51,20 @@ def CTV3_7(mainCfg,logger):
         msg = cfgDB.getDict('CTV3_7_param')
 
         # clica no botão compor msg e espera a janela abrir
-        composeMail.clickCompose(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.clickCompose(mainCfg,driver,'CTV3_7_param')
 
         # preenche campo Subject
-        subjectConstant = composeMail.fillSubject(mainCfg,driver,'CTV3_7_param')
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_7_param')
 
         # preenche campo body
-        composeMail.fillBody(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_7_param')
         
         # click salvar rascunho
-        composeMail.clickSaveDraft(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.clickSaveDraft(mainCfg,driver,'CTV3_7_param')
 
         # checar mensagem por assunto na pasta draft
-        composeMail.clickFolder(mainCfg,driver,"Rascunhos")
-        msgEl = composeMail.elementInFolder(mainCfg,driver,subjectConstant)
+        expressomailModule.clickFolder(mainCfg,driver,"Rascunhos")
+        msgEl = expressomailModule.elementInFolder(mainCfg,driver,subjectConstant)
 
         action = selenium.webdriver.common.action_chains.ActionChains(driver)
         action.double_click( msgEl )
@@ -80,10 +80,10 @@ def CTV3_7(mainCfg,logger):
         WebDriverWait(driver, mainCfg['timeout']).until(EC.title_contains('Compor mensagem:'))
             
         # filling TO field
-        composeMail.fillToOption(mainCfg,driver,'CTV3_7_param','TO')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_7_param','TO')
 
         # clicking send
-        composeMail.clickSend(mainCfg,driver,'CTV3_7_param',windowCompose)
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_7_param',windowCompose)
 
         logger.save('CTV3_7','Enviar Mensagens da pasta "Drafts"','True')        
 
@@ -104,11 +104,11 @@ def CTV3_8(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        window = composeMail.clickCompose(mainCfg,driver,'CTV3_8_param')
-        composeMail.fillToOption(mainCfg,driver,'CTV3_8_param',"TO")
-        composeMail.fillSubject(mainCfg,driver,'CTV3_8_param')
-        composeMail.fillBody(mainCfg,driver,'CTV3_8_param')
-        composeMail.clickSend(mainCfg,driver,'CTV3_8_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_8_param')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_8_param',"TO")
+        expressomailModule.fillSubject(mainCfg,driver,'CTV3_8_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_8_param')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_8_param',window)
 
         logger.save('CTV3_8','Criar Mensagem apenas com To','True')        
 
@@ -126,11 +126,11 @@ def CTV3_11(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
         aux.login(mainCfg,driver)
-        window = composeMail.clickCompose(mainCfg,driver,'CTV3_11_param')
-        composeMail.fillToOption(mainCfg,driver,'CTV3_11_param','Cc')
-        composeMail.fillSubject(mainCfg,driver,'CTV3_11_param')
-        composeMail.fillBody(mainCfg,driver,'CTV3_11_param')
-        composeMail.clickSend(mainCfg,driver,'CTV3_11_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_11_param')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_11_param','Cc')
+        expressomailModule.fillSubject(mainCfg,driver,'CTV3_11_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_11_param')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_11_param',window)
 
         logger.save('CTV3_11','Criar Mensagem apenas com Cc','True') 
 
@@ -154,20 +154,20 @@ def CTV3_18(mainCfg,logger):
         aux.login(mainCfg,driver)
 
         # compose mail
-        window = composeMail.clickCompose(mainCfg,driver,'CTV3_18_param')
-        composeMail.fillToOption(mainCfg,driver,'CTV3_18_param',"TO")
-        subjectConstant = composeMail.fillSubject(mainCfg,driver,'CTV3_18_param')
-        composeMail.fillBody(mainCfg,driver,'CTV3_18_param')
-        composeMail.clickSend(mainCfg,driver,'CTV3_18_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_18_param')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_18_param',"TO")
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_18_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_18_param')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_18_param',window)
 
         # delete mail
-        composeMail.clickFolder(mainCfg,driver,"Entrada")
-        msgSubjectList = composeMail.listFolderMessagesSubject(mainCfg,driver)
+        expressomailModule.clickFolder(mainCfg,driver,"Entrada")
+        msgSubjectList = expressomailModule.listFolderMessagesSubject(mainCfg,driver)
 
         if subjectConstant in msgSubjectList:
             
-            if composeMail.selectMessageInFolder(mainCfg,driver,subjectConstant):
-                if not composeMail.clickDelete(mainCfg,driver,subjectConstant):
+            if expressomailModule.selectMessageInFolder(mainCfg,driver,subjectConstant):
+                if not expressomailModule.clickDelete(mainCfg,driver,subjectConstant):
                     raise Exception('Could not delete message: '+msg['SUBJECT'])
             else:
                 raise Exception('Could not select the message: '+msg['SUBJECT'])
@@ -200,26 +200,26 @@ def CTV3_20(mainCfg,logger):
         aux.login(mainCfg,driver)
 
         # compose mail
-        window = composeMail.clickCompose(mainCfg,driver,'CTV3_20_param')
-        composeMail.fillToOption(mainCfg,driver,'CTV3_20_param',"TO")
-        subjectConstant = composeMail.fillSubject(mainCfg,driver,'CTV3_20_param')
-        composeMail.fillBody(mainCfg,driver,'CTV3_20_param')
-        composeMail.clickSend(mainCfg,driver,'CTV3_20_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_20_param')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_20_param',"TO")
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_20_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_20_param')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_20_param',window)
 
         # delete mail
-        composeMail.clickFolder(mainCfg,driver,"Entrada")
-        msgSubjectList = composeMail.listFolderMessagesSubject(mainCfg,driver)
+        expressomailModule.clickFolder(mainCfg,driver,"Entrada")
+        msgSubjectList = expressomailModule.listFolderMessagesSubject(mainCfg,driver)
 
         if subjectConstant in msgSubjectList:
 
             # open msg in new window
-            window = composeMail.openMessageInFolder(mainCfg,driver,subjectConstant)
+            window = expressomailModule.openMessageInFolder(mainCfg,driver,subjectConstant)
 
             if window is None:
                 raise Exception('Could not open message: '+msg['SUBJECT'])
             else:
                 # click delete in opened message
-                composeMail.clickDeleteInOpenedMessage(mainCfg,driver,window)
+                expressomailModule.clickDeleteInOpenedMessage(mainCfg,driver,window)
 
         logger.save('CTV3_20','Excluir mensagem aberta','True')
 
@@ -240,11 +240,11 @@ def CTV3_31(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        window = composeMail.clickCompose(mainCfg,driver,'CTV3_31_param')
-        composeMail.fillToOption(mainCfg,driver,'CTV3_31_param',"TO")
-        composeMail.fillSubject(mainCfg,driver,'CTV3_31_param')
-        composeMail.fillBody(mainCfg,driver,'CTV3_31_param')
-        composeMail.clickSend(mainCfg,driver,'CTV3_31_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_31_param')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_31_param',"TO")
+        expressomailModule.fillSubject(mainCfg,driver,'CTV3_31_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_31_param')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_31_param',window)
 
         logger.save('CTV3_31','Enviar Mensagens','True')        
 
@@ -265,16 +265,16 @@ def CTV3_506(mainCfg,logger):
         aux.login(mainCfg,driver)
 
         # opening folder
-        composeMail.clickFolder(mainCfg,driver,msg['folderName'])
+        expressomailModule.clickFolder(mainCfg,driver,msg['folderName'])
 
         # the accont must hae at least one message for deletion
-        if len(composeMail.listFolderMessagesSubject(mainCfg,driver)) == 0:
+        if len(expressomailModule.listFolderMessagesSubject(mainCfg,driver)) == 0:
             raise Exception('Must have at least one message for deletion!')
 
         # selecting all from page
-        composeMail.selectAllFromPage(mainCfg,driver)
+        expressomailModule.selectAllFromPage(mainCfg,driver)
 
-        if not composeMail.clickDelete(mainCfg,driver,None):
+        if not expressomailModule.clickDelete(mainCfg,driver,None):
             raise Exception('Could not delete page')
 
         logger.save(u'CTV3_506',u'Excluir todas as mensagens de uma pasta',u'True')
@@ -298,20 +298,20 @@ def CTV3_522(mainCfg,logger):
         aux.login(mainCfg,driver)
 
         # click compose msg
-        composeMail.clickCompose(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.clickCompose(mainCfg,driver,'CTV3_522_param')
 
         # filling subject field
-        subjectConstant = composeMail.fillSubject(mainCfg,driver,'CTV3_522_param')
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_522_param')
 
         # filling email body
-        composeMail.fillBody(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_522_param')
 
         # click salvar rascunho
-        composeMail.clickSaveDraft(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.clickSaveDraft(mainCfg,driver,'CTV3_522_param')
 
         # checando se a mensagem foi salva na pasta draft
-        composeMail.clickFolder(mainCfg,driver,"Rascunhos")
-        composeMail.elementInFolder(mainCfg,driver,subjectConstant)
+        expressomailModule.clickFolder(mainCfg,driver,"Rascunhos")
+        expressomailModule.elementInFolder(mainCfg,driver,subjectConstant)
 
         logger.save(u'CTV3_522',u'Salvar MENSAGEM rascunho sem destinatário',u'True')
 
