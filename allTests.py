@@ -13,7 +13,7 @@ import N10_Contatos
 
 def main():
 
-    mainCfg = cfgDB.getDict('main.cfg')
+    mainCfg = cfgDB.getDict('main.xml')
 
     logger = report.Logger()
 
