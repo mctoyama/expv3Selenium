@@ -68,7 +68,8 @@ def fillToOption(mainCfg,driver,sendMailDoc,toOption):
         raise Exception("Invalid TO email address while composing mail")
 
     # Find web element that receive the options to select: 'Para:', 'Cc:' or 'Cco:'
-    path = 'html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/div/table/tbody/tr/td[1]/div/div/div'
+#    path = 'html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/div/table/tbody/tr/td[1]/div/div/div'
+    path = 'html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/div/table/tbody/tr/td[1]/div/div'
     WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
     optionButton = driver.find_element_by_xpath(path)
 
@@ -78,19 +79,20 @@ def fillToOption(mainCfg,driver,sendMailDoc,toOption):
         optionButton.click()
 
         # click in the arrow button
-        path = '//div[3]/div/img'
-        WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,path)))
-        optionButton = driver.find_element_by_xpath(path)
-        optionButton.click()
+        path = "//div[contains(@class,'tine-grid-cell-hint')]"
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+        driver.find_element_by_xpath(path).click()
+        
+        allOptionsElement = driver.find_element_by_xpath("//div[contains(@class,'x-combo-list-inner')]")
+        toOptionElement = allOptionsElement.find_element_by_xpath("//div[contains(@class,'x-combo-list-item') and contains(text(),'" + toOptionText + "')]")
 
-        # Find web element with all the options
-        # Find the option selected
-        path = ".x-combo-list-item"
-        els = driver.find_elements_by_css_selector(path)
-        for i in els:
-            if i.text == toOptionText:
-                i.click()
-                break
+        # necessary 'if' because of old version (10) of firefox
+        if not toOptionElement.is_displayed():
+            path = "html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[3]/div/img"
+            WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
+            driver.find_element_by_xpath(path).click()
+
+        toOptionElement.click()
 
         toPath = 'html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/div/table/tbody/tr/td[2]/div'
         WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
