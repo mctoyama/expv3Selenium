@@ -1,6 +1,5 @@
 * TODO Selenium tests for Expresso V3
-* diminuir os arquivos modificados no commit
-** clickFolder
-** selectInbox
-** listInboxMessages
+* rever uso de parametros por testes - remover multiplos loads de arquivo do disco
+* rever o smart search para destinatarios - parece ter defeito
+* em loops "for" verificar se nenhum dado é encontrado
 * fazer o CTV3-506

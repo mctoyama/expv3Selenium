@@ -78,7 +78,7 @@ def CTV3_178(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        msg = cfgDB.getDict('CTV3_178_param')
+        msg = cfgDB.getDict('CTV3_178_param.xml')
         timeout =  mainCfg['timeout']
 
         selectedModuleText = 'Catálogos de Endereços'

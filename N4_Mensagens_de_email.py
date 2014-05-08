@@ -48,19 +48,19 @@ def CTV3_7(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        msg = cfgDB.getDict('CTV3_7_param')
+        msg = cfgDB.getDict('CTV3_7_param.xml')
 
         # clica no botão compor msg e espera a janela abrir
-        expressomailModule.clickCompose(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.clickCompose(mainCfg,driver,'CTV3_7_param.xml')
 
         # preenche campo Subject
-        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_7_param')
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_7_param.xml')
 
         # preenche campo body
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_7_param.xml')
         
         # click salvar rascunho
-        expressomailModule.clickSaveDraft(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.clickSaveDraft(mainCfg,driver,'CTV3_7_param.xml')
 
         # checar mensagem por assunto na pasta draft
         expressomailModule.clickFolder(mainCfg,driver,"Rascunhos")
@@ -80,10 +80,10 @@ def CTV3_7(mainCfg,logger):
         WebDriverWait(driver, mainCfg['timeout']).until(EC.title_contains('Compor mensagem:'))
             
         # filling TO field
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_7_param','TO')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_7_param.xml','TO')
 
         # clicking send
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_7_param',windowCompose)
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_7_param.xml',windowCompose)
 
         logger.save('CTV3_7','Enviar Mensagens da pasta "Drafts"','True')        
 
@@ -104,11 +104,11 @@ def CTV3_8(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_8_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_8_param',"TO")
-        expressomailModule.fillSubject(mainCfg,driver,'CTV3_8_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_8_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_8_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_8_param.xml')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_8_param.xml',"TO")
+        expressomailModule.fillSubject(mainCfg,driver,'CTV3_8_param.xml')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_8_param.xml')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_8_param.xml',window)
 
         logger.save('CTV3_8','Criar Mensagem apenas com To','True')        
 
@@ -126,11 +126,11 @@ def CTV3_11(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
         aux.login(mainCfg,driver)
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_11_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_11_param','Cc')
-        expressomailModule.fillSubject(mainCfg,driver,'CTV3_11_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_11_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_11_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_11_param.xml')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_11_param.xml','Cc')
+        expressomailModule.fillSubject(mainCfg,driver,'CTV3_11_param.xml')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_11_param.xml')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_11_param.xml',window)
 
         logger.save('CTV3_11','Criar Mensagem apenas com Cc','True') 
 
@@ -148,17 +148,17 @@ def CTV3_18(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
-        msg = cfgDB.getDict('CTV3_18_param')
+        msg = cfgDB.getDict('CTV3_18_param.xml')
 
         # login
         aux.login(mainCfg,driver)
 
         # compose mail
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_18_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_18_param',"TO")
-        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_18_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_18_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_18_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_18_param.xml')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_18_param.xml',"TO")
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_18_param.xml')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_18_param.xml')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_18_param.xml',window)
 
         # delete mail
         expressomailModule.clickFolder(mainCfg,driver,"Entrada")
@@ -194,17 +194,17 @@ def CTV3_20(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
-        msg = cfgDB.getDict('CTV3_20_param')
+        msg = cfgDB.getDict('CTV3_20_param.xml')
 
         # login
         aux.login(mainCfg,driver)
 
         # compose mail
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_20_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_20_param',"TO")
-        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_20_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_20_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_20_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_20_param.xml')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_20_param.xml',"TO")
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_20_param.xml')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_20_param.xml')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_20_param.xml',window)
 
         # delete mail
         expressomailModule.clickFolder(mainCfg,driver,"Entrada")
@@ -240,11 +240,11 @@ def CTV3_31(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_31_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_31_param',"TO")
-        expressomailModule.fillSubject(mainCfg,driver,'CTV3_31_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_31_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_31_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_31_param.xml')
+        expressomailModule.fillToOption(mainCfg,driver,'CTV3_31_param.xml',"TO")
+        expressomailModule.fillSubject(mainCfg,driver,'CTV3_31_param.xml')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_31_param.xml')
+        expressomailModule.clickSend(mainCfg,driver,'CTV3_31_param.xml',window)
 
         logger.save('CTV3_31','Enviar Mensagens','True')        
 
@@ -260,7 +260,7 @@ def CTV3_506(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
-        msg = cfgDB.getDict('CTV3_506_param')
+        msg = cfgDB.getDict('CTV3_506_param.xml')
         
         aux.login(mainCfg,driver)
 
@@ -293,21 +293,21 @@ def CTV3_522(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
-        msg = cfgDB.getDict('CTV3_522_param')
+        msg = cfgDB.getDict('CTV3_522_param.xml')
         
         aux.login(mainCfg,driver)
 
         # click compose msg
-        expressomailModule.clickCompose(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.clickCompose(mainCfg,driver,'CTV3_522_param.xml')
 
         # filling subject field
-        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_522_param')
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_522_param.xml')
 
         # filling email body
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.fillBody(mainCfg,driver,'CTV3_522_param.xml')
 
         # click salvar rascunho
-        expressomailModule.clickSaveDraft(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.clickSaveDraft(mainCfg,driver,'CTV3_522_param.xml')
 
         # checando se a mensagem foi salva na pasta draft
         expressomailModule.clickFolder(mainCfg,driver,"Rascunhos")
