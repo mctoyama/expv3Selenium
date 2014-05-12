@@ -135,3 +135,17 @@ def accessModule(mainCfg,driver,moduleIDText):
     modulekWindowPath = "//span[contains(@class,'x-tab-strip-text') and contains(text(),'" + moduleIDText + "')]"
     WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,modulekWindowPath)))
 
+    # Verify if all the 3 sections are visible
+    # west panel
+    sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div'
+    WebDriverWait(driver,timeout).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
+
+    # center panel - top
+    sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[1]'
+    WebDriverWait(driver,timeout).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
+
+    # center panel - bottom
+    sectionPath = ' html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[2]'
+    WebDriverWait(driver,timeout).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
+
+

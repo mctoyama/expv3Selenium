@@ -46,19 +46,6 @@ def CTV3_179(mainCfg,logger):
 
         aux.accessModule(mainCfg,driver,selectedModuleText)
 
-        # Verify if all the 3 sections are visible
-        # west panel
-        sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div'
-        WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
-
-        # center panel - top
-        sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[1]'
-        WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
-
-        # center panel - bottom
-        sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[2]'
-        WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
-
         logger.save('CTV3_179',u'Acessar o Módulo de Contatos','True')
 
     except Exception as err:
@@ -84,19 +71,6 @@ def CTV3_178(mainCfg,logger):
         selectedModuleText = 'Catálogos de Endereços'
 
         aux.accessModule(mainCfg,driver,selectedModuleText)
-
-        # Verify if all the 3 sections are visible
-        # west panel
-        sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div'
-        WebDriverWait(driver,timeout).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
-
-        # center panel - top
-        sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[1]'
-        WebDriverWait(driver,timeout).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
-
-        # center panel - bottom
-        sectionPath = ' html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[2]'
-        WebDriverWait(driver,timeout).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
 
         # add a contact
         addContactWindow = addressbookModule.clickAddContact(driver,timeout)
