@@ -220,7 +220,7 @@ def fillWebsite (driver,timeout,websiteText):
 
 
 ######################################
-# Preenche a Empresa
+# Clica no botão Ok para enviar os dados do contato
 def clickOk(driver,addContactWindow,timeout):
 
     # clicking ok to add the contact
