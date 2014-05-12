@@ -19,11 +19,12 @@ import selenium.common.exceptions
 # N9 - Agenda
 # 
 
+import time
 import datetime
 
 import cfgDB
 import aux
-import expressomailModule
+import calendarModule
 
 #############################################################
 # all tests for this module
@@ -41,15 +42,34 @@ def CTV3_189(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        msg = cfgDB.getDict('CTV3_7_param')
+        msg = cfgDB.getDict('CTV3_189_param.xml')
 
         # access calendar module
         aux.accessModule(mainCfg,driver,u"Calendário")
 
+        time.sleep(mainCfg['timeout'])
+
+        # checking if event already exists
+        while(msg['SUMMARY'] in calendarModule.listEvents(mainCfg,driver)):
+
+            calendarModule.selectEvent(mainCfg,driver,msg['SUMMARY'])
+            calendarModule.clickDelete(mainCfg,driver,msg['SUMMARY'])
+
+        # click for adding new event
+        window = calendarModule.clickAddEvent(mainCfg,driver)
+        calendarModule.fillSummary(mainCfg,driver,msg['SUMMARY'])
+        calendarModule.checkPrivate(mainCfg,driver,True)
+
+        calendarModule.clickSaveAndClose(mainCfg,driver,window)
+        time.sleep(mainCfg['timeout'])
+
+        if msg['SUMMARY'] not in calendarModule.listEvents(mainCfg,driver):
+            raise Exception(u"Não foi possível criar evento")
+        
         logger.save('CTV3_189',u'Permitir criação de agendamento por tipo pessoal','True')        
 
     except Exception as err:
-        logger.save('CTV3_189',u'Permitir criação de agendamento por tipo pessoal',str(type(err))+str(err))
+        logger.save('CTV3_189',u'Permitir criação de agendamento por tipo pessoal',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
