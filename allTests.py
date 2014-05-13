@@ -9,6 +9,7 @@ import report
 
 import N1_Autenticacao
 import N4_Mensagens_de_email
+import N9_Agenda
 import N10_Contatos
 
 def main():
@@ -20,6 +21,8 @@ def main():
     N1_Autenticacao.allTests(mainCfg,logger)
 
     N4_Mensagens_de_email.allTests(mainCfg,logger)
+
+    N9_Agenda.allTests(mainCfg,logger)
 
     N10_Contatos.allTests(mainCfg,logger)
 

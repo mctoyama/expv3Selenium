@@ -88,7 +88,7 @@ def CTV3_7(mainCfg,logger):
         logger.save('CTV3_7','Enviar Mensagens da pasta "Drafts"','True')        
 
     except Exception as err:
-        logger.save('CTV3_7','Enviar Mensagens da pasta "Drafts"',str(type(err))+str(err))
+        logger.save('CTV3_7','Enviar Mensagens da pasta "Drafts"',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -113,7 +113,7 @@ def CTV3_8(mainCfg,logger):
         logger.save('CTV3_8','Criar Mensagem apenas com To','True')        
 
     except Exception as err:
-        logger.save('CTV3_8','Criar Mensagem apenas com To',str(type(err))+str(err))
+        logger.save('CTV3_8','Criar Mensagem apenas com To',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -135,7 +135,7 @@ def CTV3_11(mainCfg,logger):
         logger.save('CTV3_11','Criar Mensagem apenas com Cc','True') 
 
     except Exception as err:
-        logger.save('CTV3_11','Criar Mensagem apenas com Cc',str(type(err))+str(err))        
+        logger.save('CTV3_11','Criar Mensagem apenas com Cc',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
@@ -168,17 +168,17 @@ def CTV3_18(mainCfg,logger):
             
             if expressomailModule.selectMessageInFolder(mainCfg,driver,subjectConstant):
                 if not expressomailModule.clickDelete(mainCfg,driver,subjectConstant):
-                    raise Exception('Could not delete message: '+msg['SUBJECT'])
+                    raise Exception(u'Não foi possível apagar a mensagem: '+msg['SUBJECT'])
             else:
-                raise Exception('Could not select the message: '+msg['SUBJECT'])
+                raise Exception(u'Não foi possível selecionar a mensagem: '+msg['SUBJECT'])
 
         else:
-            raise Exception('subject '+msg['SUBJECT']+' is not present in INBOX')
+            raise Exception(u'Assunto '+msg['SUBJECT']+u' não esta presente no INBOX')
 
         logger.save('CTV3_18','Excluir mensagem selecionada','True')
 
     except Exception as err:
-        logger.save('CTV3_18','Excluir mensagem selecionada',str(type(err))+str(err))
+        logger.save('CTV3_18','Excluir mensagem selecionada',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -216,7 +216,7 @@ def CTV3_20(mainCfg,logger):
             window = expressomailModule.openMessageInFolder(mainCfg,driver,subjectConstant)
 
             if window is None:
-                raise Exception('Could not open message: '+msg['SUBJECT'])
+                raise Exception(u'Não foi possível abrir a mensagem: '+msg['SUBJECT'])
             else:
                 # click delete in opened message
                 expressomailModule.clickDeleteInOpenedMessage(mainCfg,driver,window)
@@ -225,7 +225,7 @@ def CTV3_20(mainCfg,logger):
 
 
     except Exception as err:
-        logger.save('CTV3_20','Excluir mensagem aberta',str(type(err))+str(err))        
+        logger.save('CTV3_20','Excluir mensagem aberta',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
@@ -249,7 +249,7 @@ def CTV3_31(mainCfg,logger):
         logger.save('CTV3_31','Enviar Mensagens','True')        
 
     except Exception as err:
-        logger.save('CTV3_31','Enviar Mensagens',str(type(err))+str(err))
+        logger.save('CTV3_31','Enviar Mensagens',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -269,18 +269,18 @@ def CTV3_506(mainCfg,logger):
 
         # the accont must hae at least one message for deletion
         if len(expressomailModule.listFolderMessagesSubject(mainCfg,driver)) == 0:
-            raise Exception('Must have at least one message for deletion!')
+            raise Exception(u'Deve existir pelo menos uma mensagem para apagar!')
 
         # selecting all from page
         expressomailModule.selectAllFromPage(mainCfg,driver)
 
         if not expressomailModule.clickDelete(mainCfg,driver,None):
-            raise Exception('Could not delete page')
+            raise Exception(u'Não foi possível apagar a página')
 
         logger.save(u'CTV3_506',u'Excluir todas as mensagens de uma pasta',u'True')
 
     except Exception as err:
-        logger.save('CTV3_506','Excluir todas as mensagens de uma pasta',str(type(err))+str(err))        
+        logger.save('CTV3_506','Excluir todas as mensagens de uma pasta',unicode(type(err))+unicode(err))        
     finally:
         driver.quit()
 
@@ -316,7 +316,7 @@ def CTV3_522(mainCfg,logger):
         logger.save(u'CTV3_522',u'Salvar MENSAGEM rascunho sem destinatário',u'True')
 
     except Exception as err:
-        logger.save(u'CTV3_522',u'Salvar MENSAGEM rascunho sem destinatário',str(type(err))+str(err))
+        logger.save(u'CTV3_522',u'Salvar MENSAGEM rascunho sem destinatário',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()    

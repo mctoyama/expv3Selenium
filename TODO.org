@@ -4,4 +4,3 @@
 * em loops "for" verificar se nenhum dado é encontrado
 * fazer o CTV3-506
 * remover wait do clickCompose
-* mudar str -> unicode

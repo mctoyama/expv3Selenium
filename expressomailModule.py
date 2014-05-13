@@ -61,7 +61,7 @@ def fillToOption(mainCfg,driver,sendMailDoc,toOption):
     msg = cfgDB.getDict(sendMailDoc)
 
     if toOption == "Cc" or toOption == "Cco":
-        toOptionText = str(toOption) + ':'
+        toOptionText = unicode(toOption) + ':'
     elif toOption == "TO":
         toOptionText = 'Para:'
     else:
@@ -149,7 +149,7 @@ def fillSubject(mainCfg,driver,sendMailDoc):
     WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
     subjectElement = driver.find_element_by_xpath(subjectPath)
 
-    subjectConstant = msg['SUBJECT']+' -- '+str(datetime.datetime.now())
+    subjectConstant = msg['SUBJECT']+' -- '+unicode(datetime.datetime.now())
 
     subjectElement.send_keys(subjectConstant)
     subjectElement.send_keys(Keys.ENTER)

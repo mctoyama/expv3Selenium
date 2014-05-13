@@ -30,5 +30,8 @@ Example is in file ./sampleCfg/
 
 Do this for all files in ./cfg/ dir
 
+RUN
+python allTests.py
+
 =============
 
