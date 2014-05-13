@@ -23,9 +23,7 @@ import time
 # clica no botão compor msg e espera a janela abrir
 # retorna o window id para a nova janela
 
-def clickCompose(mainCfg,driver,sendMailDoc):
-
-    msg = cfgDB.getDict(sendMailDoc)
+def clickCompose(mainCfg,driver):
 
     try:
         # waiting for loading list of inbox messages
@@ -56,9 +54,7 @@ def clickCompose(mainCfg,driver,sendMailDoc):
 
 #############################################################
 # preenche campo To, Cc ou Cco
-def fillToOption(mainCfg,driver,sendMailDoc,toOption):
-
-    msg = cfgDB.getDict(sendMailDoc)
+def fillToOption(mainCfg,driver,toOption,dest):
 
     if toOption == "Cc" or toOption == "Cco":
         toOptionText = unicode(toOption) + ':'
@@ -103,7 +99,7 @@ def fillToOption(mainCfg,driver,sendMailDoc,toOption):
     toPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/input'
     WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,toPath)))
     toInput = driver.find_element_by_xpath(toPath)
-    toInput.send_keys(msg[toOption])
+    toInput.send_keys(dest)
 
     # checking if search button is clickable
     findButtonPath = '//html/body/div[10]/div[2]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
@@ -140,16 +136,14 @@ def fillToOption(mainCfg,driver,sendMailDoc,toOption):
 #############################################################
 # preenche campo Subject
 
-def fillSubject(mainCfg,driver,sendMailDoc):
-
-    msg = cfgDB.getDict(sendMailDoc)
+def fillSubject(mainCfg,driver,subject):
 
     # filling subject field
     subjectPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/input'
     WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,subjectPath)))
     subjectElement = driver.find_element_by_xpath(subjectPath)
 
-    subjectConstant = msg['SUBJECT']+' -- '+unicode(datetime.datetime.now())
+    subjectConstant = subject+' -- '+unicode(datetime.datetime.now())
 
     subjectElement.send_keys(subjectConstant)
     subjectElement.send_keys(Keys.ENTER)
@@ -159,9 +153,7 @@ def fillSubject(mainCfg,driver,sendMailDoc):
 #############################################################
 # preenche campo body
 
-def fillBody(mainCfg,driver,sendMailDoc):
-
-    msg = cfgDB.getDict(sendMailDoc)
+def fillBody(mainCfg,driver,body):
 
     # filling email body
     msgBodyFrame = 'iframe'
@@ -171,15 +163,13 @@ def fillBody(mainCfg,driver,sendMailDoc):
     msgPath = '//html/body'
     WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,msgPath)))
     msgEl = driver.find_element_by_xpath(msgPath)
-    msgEl.send_keys(msg['BODY'])
+    msgEl.send_keys(body)
     msgEl.send_keys(Keys.ENTER)
 
 #############################################################
 # clica no botão enviar email
 
-def clickSend(mainCfg,driver,sendMailDoc,windowCompose):
-
-    msg = cfgDB.getDict(sendMailDoc)
+def clickSend(mainCfg,driver,windowCompose):
 
     # clicking send
     driver.switch_to_default_content()
@@ -197,9 +187,7 @@ def clickSend(mainCfg,driver,sendMailDoc,windowCompose):
 #############################################################
 # clicar em salvar rascunho
 
-def clickSaveDraft(mainCfg,driver,sendMailDoc):
-
-    msg = cfgDB.getDict(sendMailDoc)
+def clickSaveDraft(mainCfg,driver):
 
     driver.switch_to_default_content()
 
