@@ -1,6 +1,2 @@
 * TODO Selenium tests for Expresso V3
-* rever uso de parametros por testes - remover multiplos loads de arquivo do disco
-* rever o smart search para destinatarios - parece ter defeito
-* em loops "for" verificar se nenhum dado é encontrado
-* fazer o CTV3-506
 * remover wait do clickCompose

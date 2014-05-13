@@ -64,7 +64,6 @@ def fillToOption(mainCfg,driver,toOption,dest):
         raise Exception("Invalid TO email address while composing mail")
 
     # Find web element that receive the options to select: 'Para:', 'Cc:' or 'Cco:'
-#    path = 'html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/div/table/tbody/tr/td[1]/div/div/div'
     path = 'html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/div/table/tbody/tr/td[1]/div/div'
     WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,path)))
     optionButton = driver.find_element_by_xpath(path)
@@ -101,15 +100,19 @@ def fillToOption(mainCfg,driver,toOption,dest):
     toInput = driver.find_element_by_xpath(toPath)
     toInput.send_keys(dest)
 
-    # checking if search button is clickable
-    findButtonPath = '//html/body/div[10]/div[2]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
+    # 'Contatos Dinâmicos' checking if search button is clickable
+
+    # time.sleep is necessary, because the 'Contatos dinâmicos' are already loaded in the page.
+    # it only needs time to be displayed
+    time.sleep(1)
 
     # checking for combobox
-    try:
-        driver.find_element_by_xpath(findButtonPath)
+    findButtonPath = '//div[2]/div/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
+    findEl = driver.find_element_by_xpath(findButtonPath)
 
-    except selenium.common.exceptions.NoSuchElementException as err:
+    if not findEl.is_displayed():
 
+        # 'Contatos dinâmicos' is not visible. click to became visible
         selPath = '//html/body/div[1]/div[2]/div/form/div/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/span/img[2]'
         WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,selPath)))
         selElement = driver.find_element_by_xpath(selPath)
@@ -118,12 +121,19 @@ def fillToOption(mainCfg,driver,toOption,dest):
     try:
         okClass = 'search-item'
         WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.CLASS_NAME,okClass)))
+
+        foundFlag = False
+
         for el in driver.find_elements_by_class_name(okClass):
             WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,'//b')))
             tmp = el.find_element_by_xpath('//b')
-            if tmp.text == toOptionText:
+            if dest in tmp.text:
                 tmp.click()
+                foundFlag = True
                 break
+
+        if not foundFlag:
+            raise selenium.common.exceptions.TimeoutException(u'Contato não esta nos contatos dinâmicos')
 
     except selenium.common.exceptions.TimeoutException as err:
 
