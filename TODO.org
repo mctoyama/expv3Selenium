@@ -1,6 +1,2 @@
 * TODO Selenium tests for Expresso V3
-* diminuir os arquivos modificados no commit
-** clickFolder
-** selectInbox
-** listInboxMessages
-* fazer o CTV3-506
+* remover wait do clickCompose

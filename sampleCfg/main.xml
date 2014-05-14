@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+  <username>username</username>
+  <passwd>passwd</passwd>
+  <lastName>Toyama</lastName>
+  <webdriver>Firefox</webdriver>
+  <firebugBKP>/home/user/.mozilla/firefox/ian5uhju.default/extensions/firebug@software.joehewitt.com.xpi</firebugBKP>
+  <firexpathBKP>/home/user/.mozilla/firefox/ian5uhju.default/extensions/FireXPath@pierre.tholence.com.xpi</firexpathBKP>
+  <seleniumServerBKP>http://seuseleniumserver:4444/wd/hub</seleniumServerBKP>
+  <url>http://seuexpresso.gov.br</url>
+  <language>português Brasil [pt_BR]</language>
+  <timeout type='int'>15</timeout>
+</config>

@@ -5,6 +5,8 @@ Selenium tests for Expresso V3
 
 Autor 
 # Marcelo Costa Toyama - marcelo.toyama@serpro.gov.br
+# Juliana Hernandez - juliana.hernandez@serpro.gov.br
+# Rafael Raymundo da Silva - rafael.silva@serpro.gov.br
 
 =============
 Tools used for selenium
@@ -24,16 +26,12 @@ https://comunidadeexpresso.serpro.gov.br/mediawiki/index.php/Arquivo:CTV3_test_s
 How to use
 
 edit files in ./cfg/ dir for testes parameters.
-and example is in file ./sampleCfg/
-
-Use 'python cfgDB.py' for editing.
-
--- ** -- 
-mv sampleCfg cfg
-python cfgDB.py main.cfg
--- ** --
+Example is in file ./sampleCfg/
 
 Do this for all files in ./cfg/ dir
+
+RUN
+python allTests.py
 
 =============
 

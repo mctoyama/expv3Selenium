@@ -9,7 +9,7 @@ from datetime import datetime, date, time
 class Logger:
     def __init__(self):
 
-        start = str(datetime.now()).encode('utf8')
+        start = unicode(datetime.now()).encode('utf8')
 
         self.reportName = 'report - '+start+'.html'
 
@@ -51,7 +51,7 @@ class Logger:
     
         txt = u"""</tbody>
                        <tfoot>
-                         <tr><th>end</th><th>"""+str(datetime.now()).encode('utf8')+u"""</th></tr>
+                         <tr><th>end</th><th>"""+unicode(datetime.now()).encode('utf8')+u"""</th></tr>
                        </tfoot>
                        </table>
                      </body>

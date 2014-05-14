@@ -43,7 +43,7 @@ def CTV3_1(mainCfg,logger):
         logger.save('CTV3_1','Logar no sistema com sucesso',"True")
 
     except Exception as err:
-        logger.save('CTV3_1','Logar no sistema com sucesso',str(type(err))+str(err))        
+        logger.save('CTV3_1','Logar no sistema com sucesso',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
@@ -66,7 +66,7 @@ def CTV3_41(mainCfg,logger):
         logger.save('CTV3_41','Logar no sistema com login incorreto',"True")
         
     except Exception as err:
-        logger.save('CTV3_41','Logar no sistema com login incorreto',str(type(err))+str(err))        
+        logger.save('CTV3_41','Logar no sistema com login incorreto',unicode(type(err))+unicode(err))        
     finally:
         driver.quit()
 
@@ -86,7 +86,7 @@ def CTV3_43(mainCfg,logger):
         logger.save('CTV3_43','Logar no sistema com senha incorreta',"True")
         
     except Exception as err:
-        logger.save('CTV3_43','Logar no sistema com senha incorreta',str(type(err))+str(err))
+        logger.save('CTV3_43','Logar no sistema com senha incorreta',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -107,7 +107,7 @@ def CTV3_44(mainCfg,logger):
         logger.save('CTV3_44','Logar no sistema com login vazio',"True")
         
     except Exception as err:
-        logger.save('CTV3_44','Logar no sistema com login vazio',str(type(err))+str(err))
+        logger.save('CTV3_44','Logar no sistema com login vazio',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -129,7 +129,7 @@ def CTV3_45(mainCfg,logger):
         logger.save('CTV3_45','Logar no sistema com senha vazia',"True")
         
     except Exception as err:
-        logger.save('CTV3_45','Logar no sistema com senha vazia',str(type(err))+str(err))
+        logger.save('CTV3_45','Logar no sistema com senha vazia',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -150,7 +150,7 @@ def CTV3_46(mainCfg,logger):
         logger.save('CTV3_46','Logar no sistema com login usando caracteres em branco',"True")
         
     except Exception as err:
-        logger.save('CTV3_46','Logar no sistema com login usando caracteres em branco',str(type(err))+str(err))
+        logger.save('CTV3_46','Logar no sistema com login usando caracteres em branco',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -172,7 +172,7 @@ def CTV3_47(mainCfg,logger):
         logger.save('CTV3_47','Logar no sistema com senha usando caracteres em branco',"True")
         
     except Exception as err:
-        logger.save('CTV3_47','Logar no sistema com senha usando caracteres em branco',str(type(err))+str(err))
+        logger.save('CTV3_47','Logar no sistema com senha usando caracteres em branco',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -193,7 +193,7 @@ def CTV3_48(mainCfg,logger):
         logger.save('CTV3_48','Logar no sistema com login usando caracteres especiais',"True")
         
     except Exception as err:
-        logger.save('CTV3_48','Logar no sistema com login usando caracteres especiais',str(type(err))+str(err))
+        logger.save('CTV3_48','Logar no sistema com login usando caracteres especiais',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()

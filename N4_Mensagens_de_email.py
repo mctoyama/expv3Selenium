@@ -48,19 +48,19 @@ def CTV3_7(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        msg = cfgDB.getDict('CTV3_7_param')
+        msg = cfgDB.getDict('CTV3_7_param.xml')
 
         # clica no botão compor msg e espera a janela abrir
-        expressomailModule.clickCompose(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.clickCompose(mainCfg,driver)
 
         # preenche campo Subject
-        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_7_param')
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,msg["SUBJECT"])
 
         # preenche campo body
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.fillBody(mainCfg,driver,msg['BODY'])
         
         # click salvar rascunho
-        expressomailModule.clickSaveDraft(mainCfg,driver,'CTV3_7_param')
+        expressomailModule.clickSaveDraft(mainCfg,driver)
 
         # checar mensagem por assunto na pasta draft
         expressomailModule.clickFolder(mainCfg,driver,"Rascunhos")
@@ -80,15 +80,15 @@ def CTV3_7(mainCfg,logger):
         WebDriverWait(driver, mainCfg['timeout']).until(EC.title_contains('Compor mensagem:'))
             
         # filling TO field
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_7_param','TO')
+        expressomailModule.fillToOption(mainCfg,driver,'TO',msg['TO'])
 
         # clicking send
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_7_param',windowCompose)
+        expressomailModule.clickSend(mainCfg,driver,windowCompose)
 
         logger.save('CTV3_7','Enviar Mensagens da pasta "Drafts"','True')        
 
     except Exception as err:
-        logger.save('CTV3_7','Enviar Mensagens da pasta "Drafts"',str(type(err))+str(err))
+        logger.save('CTV3_7','Enviar Mensagens da pasta "Drafts"',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -102,18 +102,20 @@ def CTV3_8(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
+        msg = cfgDB.getDict('CTV3_8_param.xml')
+
         aux.login(mainCfg,driver)
 
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_8_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_8_param',"TO")
-        expressomailModule.fillSubject(mainCfg,driver,'CTV3_8_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_8_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_8_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver)
+        expressomailModule.fillToOption(mainCfg,driver,"TO",msg['TO'])
+        expressomailModule.fillSubject(mainCfg,driver,msg["SUBJECT"])
+        expressomailModule.fillBody(mainCfg,driver,msg['BODY'])
+        expressomailModule.clickSend(mainCfg,driver,window)
 
         logger.save('CTV3_8','Criar Mensagem apenas com To','True')        
 
     except Exception as err:
-        logger.save('CTV3_8','Criar Mensagem apenas com To',str(type(err))+str(err))
+        logger.save('CTV3_8','Criar Mensagem apenas com To',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -125,17 +127,18 @@ def CTV3_11(mainCfg,logger):
     try:
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
+        msg = cfgDB.getDict('CTV3_11_param.xml')
         aux.login(mainCfg,driver)
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_11_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_11_param','Cc')
-        expressomailModule.fillSubject(mainCfg,driver,'CTV3_11_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_11_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_11_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver)
+        expressomailModule.fillToOption(mainCfg,driver,'Cc',msg["Cc"])
+        expressomailModule.fillSubject(mainCfg,driver,msg["SUBJECT"])
+        expressomailModule.fillBody(mainCfg,driver,msg['BODY'])
+        expressomailModule.clickSend(mainCfg,driver,window)
 
         logger.save('CTV3_11','Criar Mensagem apenas com Cc','True') 
 
     except Exception as err:
-        logger.save('CTV3_11','Criar Mensagem apenas com Cc',str(type(err))+str(err))        
+        logger.save('CTV3_11','Criar Mensagem apenas com Cc',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
@@ -148,17 +151,17 @@ def CTV3_18(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
-        msg = cfgDB.getDict('CTV3_18_param')
+        msg = cfgDB.getDict('CTV3_18_param.xml')
 
         # login
         aux.login(mainCfg,driver)
 
         # compose mail
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_18_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_18_param',"TO")
-        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_18_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_18_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_18_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver)
+        expressomailModule.fillToOption(mainCfg,driver,"TO",msg["TO"])
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,msg["SUBJECT"])
+        expressomailModule.fillBody(mainCfg,driver,msg['BODY'])
+        expressomailModule.clickSend(mainCfg,driver,window)
 
         # delete mail
         expressomailModule.clickFolder(mainCfg,driver,"Entrada")
@@ -168,17 +171,17 @@ def CTV3_18(mainCfg,logger):
             
             if expressomailModule.selectMessageInFolder(mainCfg,driver,subjectConstant):
                 if not expressomailModule.clickDelete(mainCfg,driver,subjectConstant):
-                    raise Exception('Could not delete message: '+msg['SUBJECT'])
+                    raise Exception(u'Não foi possível apagar a mensagem: '+msg['SUBJECT'])
             else:
-                raise Exception('Could not select the message: '+msg['SUBJECT'])
+                raise Exception(u'Não foi possível selecionar a mensagem: '+msg['SUBJECT'])
 
         else:
-            raise Exception('subject '+msg['SUBJECT']+' is not present in INBOX')
+            raise Exception(u'Assunto '+msg['SUBJECT']+u' não esta presente no INBOX')
 
         logger.save('CTV3_18','Excluir mensagem selecionada','True')
 
     except Exception as err:
-        logger.save('CTV3_18','Excluir mensagem selecionada',str(type(err))+str(err))
+        logger.save('CTV3_18','Excluir mensagem selecionada',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -194,17 +197,17 @@ def CTV3_20(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
-        msg = cfgDB.getDict('CTV3_20_param')
+        msg = cfgDB.getDict('CTV3_20_param.xml')
 
         # login
         aux.login(mainCfg,driver)
 
         # compose mail
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_20_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_20_param',"TO")
-        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_20_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_20_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_20_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver)
+        expressomailModule.fillToOption(mainCfg,driver,"TO",msg['TO'])
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,msg["SUBJECT"])
+        expressomailModule.fillBody(mainCfg,driver,msg['BODY'])
+        expressomailModule.clickSend(mainCfg,driver,window)
 
         # delete mail
         expressomailModule.clickFolder(mainCfg,driver,"Entrada")
@@ -216,7 +219,7 @@ def CTV3_20(mainCfg,logger):
             window = expressomailModule.openMessageInFolder(mainCfg,driver,subjectConstant)
 
             if window is None:
-                raise Exception('Could not open message: '+msg['SUBJECT'])
+                raise Exception(u'Não foi possível abrir a mensagem: '+msg['SUBJECT'])
             else:
                 # click delete in opened message
                 expressomailModule.clickDeleteInOpenedMessage(mainCfg,driver,window)
@@ -225,7 +228,7 @@ def CTV3_20(mainCfg,logger):
 
 
     except Exception as err:
-        logger.save('CTV3_20','Excluir mensagem aberta',str(type(err))+str(err))        
+        logger.save('CTV3_20','Excluir mensagem aberta',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
@@ -238,18 +241,20 @@ def CTV3_31(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
+        msg = cfgDB.getDict('CTV3_31_param.xml')
+
         aux.login(mainCfg,driver)
 
-        window = expressomailModule.clickCompose(mainCfg,driver,'CTV3_31_param')
-        expressomailModule.fillToOption(mainCfg,driver,'CTV3_31_param',"TO")
-        expressomailModule.fillSubject(mainCfg,driver,'CTV3_31_param')
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_31_param')
-        expressomailModule.clickSend(mainCfg,driver,'CTV3_31_param',window)
+        window = expressomailModule.clickCompose(mainCfg,driver)
+        expressomailModule.fillToOption(mainCfg,driver,"TO",msg['TO'])
+        expressomailModule.fillSubject(mainCfg,driver,msg["SUBJECT"])
+        expressomailModule.fillBody(mainCfg,driver,msg['BODY'])
+        expressomailModule.clickSend(mainCfg,driver,window)
 
         logger.save('CTV3_31','Enviar Mensagens','True')        
 
     except Exception as err:
-        logger.save('CTV3_31','Enviar Mensagens',str(type(err))+str(err))
+        logger.save('CTV3_31','Enviar Mensagens',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()
@@ -260,7 +265,7 @@ def CTV3_506(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
-        msg = cfgDB.getDict('CTV3_506_param')
+        msg = cfgDB.getDict('CTV3_506_param.xml')
         
         aux.login(mainCfg,driver)
 
@@ -269,18 +274,18 @@ def CTV3_506(mainCfg,logger):
 
         # the accont must hae at least one message for deletion
         if len(expressomailModule.listFolderMessagesSubject(mainCfg,driver)) == 0:
-            raise Exception('Must have at least one message for deletion!')
+            raise Exception(u'Deve existir pelo menos uma mensagem para apagar!')
 
         # selecting all from page
         expressomailModule.selectAllFromPage(mainCfg,driver)
 
         if not expressomailModule.clickDelete(mainCfg,driver,None):
-            raise Exception('Could not delete page')
+            raise Exception(u'Não foi possível apagar a página')
 
         logger.save(u'CTV3_506',u'Excluir todas as mensagens de uma pasta',u'True')
 
     except Exception as err:
-        logger.save('CTV3_506','Excluir todas as mensagens de uma pasta',str(type(err))+str(err))        
+        logger.save('CTV3_506','Excluir todas as mensagens de uma pasta',unicode(type(err))+unicode(err))        
     finally:
         driver.quit()
 
@@ -293,21 +298,21 @@ def CTV3_522(mainCfg,logger):
         # Create a new instance of the webdriver        
         driver = aux.createWebDriver(mainCfg)
 
-        msg = cfgDB.getDict('CTV3_522_param')
+        msg = cfgDB.getDict('CTV3_522_param.xml')
         
         aux.login(mainCfg,driver)
 
         # click compose msg
-        expressomailModule.clickCompose(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.clickCompose(mainCfg,driver)
 
         # filling subject field
-        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,'CTV3_522_param')
+        subjectConstant = expressomailModule.fillSubject(mainCfg,driver,msg["SUBJECT"])
 
         # filling email body
-        expressomailModule.fillBody(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.fillBody(mainCfg,driver,msg['BODY'])
 
         # click salvar rascunho
-        expressomailModule.clickSaveDraft(mainCfg,driver,'CTV3_522_param')
+        expressomailModule.clickSaveDraft(mainCfg,driver)
 
         # checando se a mensagem foi salva na pasta draft
         expressomailModule.clickFolder(mainCfg,driver,"Rascunhos")
@@ -316,7 +321,7 @@ def CTV3_522(mainCfg,logger):
         logger.save(u'CTV3_522',u'Salvar MENSAGEM rascunho sem destinatário',u'True')
 
     except Exception as err:
-        logger.save(u'CTV3_522',u'Salvar MENSAGEM rascunho sem destinatário',str(type(err))+str(err))
+        logger.save(u'CTV3_522',u'Salvar MENSAGEM rascunho sem destinatário',unicode(type(err))+unicode(err))
 
     finally:
         driver.quit()    

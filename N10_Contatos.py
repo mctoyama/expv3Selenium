@@ -49,7 +49,7 @@ def CTV3_179(mainCfg,logger):
         logger.save('CTV3_179',u'Acessar o Módulo de Contatos','True')
 
     except Exception as err:
-        logger.save('CTV3_179',u'Acessar o Módulo de Contatos',str(type(err))+str(err))        
+        logger.save('CTV3_179',u'Acessar o Módulo de Contatos',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
@@ -65,7 +65,7 @@ def CTV3_178(mainCfg,logger):
 
         aux.login(mainCfg,driver)
 
-        msg = cfgDB.getDict('CTV3_178_param')
+        msg = cfgDB.getDict('CTV3_178_param.xml')
         timeout =  mainCfg['timeout']
 
         selectedModuleText = 'Catálogos de Endereços'
@@ -87,7 +87,7 @@ def CTV3_178(mainCfg,logger):
         logger.save('CTV3_178','Adicionar um contato','True')
 
     except Exception as err:
-        logger.save('CTV3_178','Adicionar um contato',str(type(err))+str(err))        
+        logger.save('CTV3_178','Adicionar um contato',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
