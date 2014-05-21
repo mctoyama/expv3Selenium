@@ -30,6 +30,7 @@ import addressbookModule
 def allTests(mainCfg,logger):
     CTV3_179(mainCfg,logger)
     CTV3_178(mainCfg,logger)
+    CTV3_180(mainCfg,logger)
 
 
 #############################################################
@@ -88,6 +89,37 @@ def CTV3_178(mainCfg,logger):
 
     except Exception as err:
         logger.save('CTV3_178','Adicionar um contato',unicode(type(err))+unicode(err))        
+
+    finally:
+        driver.quit()
+
+
+#############################################################
+# View contact information
+def CTV3_180(mainCfg,logger):
+
+    try:
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver(mainCfg)
+
+        aux.login(mainCfg,driver)
+
+        timeout =  mainCfg['timeout']
+
+        selectedModuleText = 'Catálogos de Endereços'
+
+        aux.accessModule(mainCfg,driver,selectedModuleText)
+
+        # select a contact, returning the selected contact row path
+        contactInfoRowPath = addressbookModule.selectContact(driver,timeout)
+
+        # compare the contact info with the info displayed in the bottom section
+        addressbookModule.compareContactInfoSections(driver,timeout,contactInfoRowPath)
+
+        logger.save('CTV3_180',u'Visualizar informações do contato','True')
+
+    except Exception as err:
+        logger.save('CTV3_180',u'Visualizar informações do contato',str(type(err))+str(err))        
 
     finally:
         driver.quit()

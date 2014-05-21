@@ -9,8 +9,11 @@ from selenium.webdriver.support import expected_conditions as EC # available sin
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 import selenium.common.exceptions
+
+import collections
 
 #############################################################
 # Clica no botão "Adicionar Contato" e espera a janela abrir
@@ -22,7 +25,7 @@ def clickAddContact(driver,timeout):
     WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH,addContactButtonPath)))
     driver.find_element_by_xpath(addContactButtonPath).click()
 
-    # wait for compor email window
+    # wait for "Adicionar Contato" window
     WebDriverWait(driver,timeout).until( lambda driver: len(driver.window_handles) == 2 )
 
     addContactWindow = driver.window_handles[-1]
@@ -228,4 +231,108 @@ def clickOk(driver,addContactWindow,timeout):
     WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH,okButtonPath)))
     driver.find_element_by_xpath(okButtonPath).click()
 
+
+######################################
+# Seleciona o 1o. contato entre os contatos do Catálogo de Endereços Pessoais
+def selectContact(driver,timeout):
+
+    driver.find_element_by_xpath("//img[contains(@class,'x-tree-node-icon') and contains(@class,'AddressbookContact')]").click()
+
+    # Click in the span for all addressbooks
+    allAddressbooksTextSpan = driver.find_element_by_xpath("//span[contains(text(),'Todos(as) Catálogos')]")
+    if not allAddressbooksTextSpan.is_displayed():
+        allAddressbooksSpan = driver.find_element_by_xpath("//span[contains(@class,'ux-arrowcollapse-header-text') and contains(text(),'Catálogos')]")
+        allAddressbooksSpan.click()
+
+    # Click in all personal addressbooks span
+    path = "//ul/li/ul/li/div/a/span"
+    WebDriverWait(driver, timeout).until(EC.presence_of_all_elements_located((By.XPATH,path)))
+    allAdds = driver.find_elements_by_xpath(path)
+    for i in allAdds:
+        if i.text == u'Catálogos':
+            i.click()
+            break
+
+    # Click in the personal addressbook span
+    path = "//li/ul/li[1]/ul/li/div/a/span"
+    WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH,path)))
+    driver.find_element_by_xpath(path).click()
+
+    path = "//div[2]/div/div/div/div/div[2]/div/div/div/div/div/div[2]/div/div[1]"
+    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH,path)))
+
+    path = "//div[2]/div/div/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td/div"
+    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH,path)))
+    divCountRegs = driver.find_element_by_xpath(path)
+    if divCountRegs.text == u'Não há Contatos para mostrar':
+        raise Exception("Não há Contatos para mostrar")
+    else:
+
+        path = "//div[2]/div/div/div/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/table/tbody/tr[1]/td[1]/div"
+        WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH,path)))
+        driver.find_element_by_xpath(path).click()
+        return "//div[2]/div/div/div/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/table/tbody/tr[1]"
+
+def getContactInfo(driver,timeout,contactInfoRowPath):
+    contactInfoRow = driver.find_element_by_xpath(contactInfoRowPath)
+
+    dc = ActionChains(driver).double_click(contactInfoRow)
+    dc.perform()
+
+    # wait for "Editar Contato" window
+    WebDriverWait(driver,timeout).until( lambda driver: len(driver.window_handles) == 2 )
+
+    addContactWindow = driver.window_handles[-1]
+
+    driver.switch_to_window(addContactWindow)
+    WebDriverWait(driver,timeout).until(EC.title_contains('Editar Contato'))
+
+    streetCompanyText = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value")
+    regionCompanyText = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/div/div/div[1]/input").get_attribute("value")
+    postalCodeCompanyText = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value")
+    cityCompanyText = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/input").get_attribute("value")
+    countryCompanyText = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[1]/div/input").get_attribute("value")
+
+    driver.find_element_by_xpath("//div/div[1]/div[1]/div[1]/ul/li[2]/a[2]/em/span/span").click()
+
+    contactInfoReg = collections.namedtuple('contactInfoReg',['nameText','lastNameText','companyText','companyUnitText','phoneNumberText','cellPhoneNumberText','faxText','privatePhoneNumberText','privCellPhoneNumberText','privateFaxText','emailText','privateEmailText','websiteText','streetCompanyText','regionCompanyText','postalCodeCompanyText','cityCompanyText','countryCompanyText','streetPrivText','regionPrivText','postalCodePrivText','cityPrivText','countryPrivText'])
+
+    reg = contactInfoReg(driver.find_element_by_xpath("//fieldset[1]/div/div/div[1]/div/div/div/div[1]/div/div/div[2]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[1]/div/div/div[1]/div/div/div/div[1]/div/div/div[2]/div/div/div/div[3]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[1]/div/div/div[1]/div/div/div/div[1]/div/div/div[3]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[1]/div/div/div[1]/div/div/div/div[1]/div/div/div[3]/div/div/div/div[2]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[1]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[1]/div/div/div/div[3]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[2]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[3]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div[1]/input").get_attribute("value"), streetCompanyText, regionCompanyText, postalCodeCompanyText, cityCompanyText, countryCompanyText, driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[1]/div/div/div/div[1]/input").get_attribute("value"),  driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/input").get_attribute("value"), driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[1]/div/input").get_attribute("value"))
+
+
+    cancelBtnPath = "//td[2]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/table/tbody/tr[2]/td[2]/em/button"
+    WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH,cancelBtnPath)))
+    driver.find_element_by_xpath(cancelBtnPath).click()
+
+    WebDriverWait(driver, timeout).until( lambda driver: addContactWindow not in driver.window_handles)
+    driver.switch_to_window(driver.window_handles[0])
+
+    return reg
+
+
+######################################
+# Compara os dados do contato com os dados que estão sendo visualizados na seção inferior
+# Por default, somente os campos abaixo aparecem tanto na linha da seção superior quanto na seção de informações do contato (seção inferior)
+# Nome, Empresa, Cidade, E-mail, Telefone e Celular
+def compareContactInfoSections(driver,timeout,contactInfoRowPath):
+    contactInfoReg = getContactInfo(driver,timeout,contactInfoRowPath)
+
+    companyUnitText = contactInfoReg.companyText + ' / ' + contactInfoReg.companyUnitText
+    companyAddressText = companyUnitText + "\n" + contactInfoReg.streetCompanyText + "\n" + contactInfoReg.postalCodeCompanyText + " " + contactInfoReg.cityCompanyText + "\n" + contactInfoReg.regionCompanyText + " / " + contactInfoReg.countryCompanyText
+    if companyAddressText != driver.find_element_by_xpath("//div[2]/div/div/div/div[1]/div[2]/div[6]").text:
+        raise Exception(u"Endereço da empresa exibido incorretamente")
+
+    nameLastNameText = contactInfoReg.nameText + " " + contactInfoReg.lastNameText
+    privAddressText = nameLastNameText + "\n" + contactInfoReg.streetPrivText  + "\n" + contactInfoReg.postalCodePrivText + " " + contactInfoReg.cityPrivText + "\n" + contactInfoReg.regionPrivText + " / " + contactInfoReg.countryPrivText
+    if privAddressText != driver.find_element_by_xpath("//div[2]/div/div/div/div[2]/div[6]").text:
+        raise Exception(u"Endereço pessoal exibido incorretamente")
+
+    companyInfoText = 'Telefone\n' + contactInfoReg.phoneNumberText + '\nCelular\n' + contactInfoReg.cellPhoneNumberText + '\nFax\n' + contactInfoReg.faxText + '\nE-mail\n' + contactInfoReg.emailText[:15] + '...\nWeb\n' + contactInfoReg.websiteText[:15] + '...'
+
+    if (companyInfoText != driver.find_element_by_xpath("//div[2]/div/div/div/div/div[2]/div[7]").text):
+        raise Exception("Informações profissionais do contato exibidas incorretamente")
+
+    privInfoText = 'Telefone\n' + contactInfoReg.privatePhoneNumberText + '\nCelular\n' + contactInfoReg.privCellPhoneNumberText + '\nFax\n' + contactInfoReg.privateFaxText + '\nE-mail\n' + contactInfoReg.privateEmailText[:15] + '...\nWeb'
+    if (privInfoText != driver.find_element_by_xpath("//div[2]/div/div/div/div[2]/div[7]").text):
+        raise Exception("Informações pessoais do contato exibidas incorretamente")
 
