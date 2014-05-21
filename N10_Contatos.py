@@ -23,6 +23,7 @@ import cfgDB
 import aux
 
 import addressbookModule
+import collections
 
 
 #############################################################
@@ -31,6 +32,7 @@ def allTests(mainCfg,logger):
     CTV3_179(mainCfg,logger)
     CTV3_178(mainCfg,logger)
     CTV3_180(mainCfg,logger)
+    CTV3_192(mainCfg,logger)
 
 
 #############################################################
@@ -123,4 +125,52 @@ def CTV3_180(mainCfg,logger):
 
     finally:
         driver.quit()
+
+#############################################################
+# Edit contact information
+def CTV3_192(mainCfg,logger):
+    try:
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver(mainCfg)
+
+        aux.login(mainCfg,driver)
+
+        timeout =  mainCfg['timeout']
+
+        selectedModuleText = 'Catálogos de Endereços'
+
+        aux.accessModule(mainCfg,driver,selectedModuleText)
+
+        # select a contact, returning the selected contact row path
+        contactInfoRowPath = addressbookModule.selectContact(driver,timeout)
+
+        # get the contact information
+        oldContactInfoReg = addressbookModule.getContactInfo(driver,timeout,contactInfoRowPath)
+
+        contactInfoReg = collections.namedtuple('contactInfoReg',['nameText','lastNameText','companyText','companyUnitText','phoneNumberText','cellPhoneNumberText','faxText','privatePhoneNumberText','privCellPhoneNumberText','privateFaxText','emailText','privateEmailText','websiteText','streetCompanyText','regionCompanyText','postalCodeCompanyText','cityCompanyText','countryCompanyText','streetPrivText','regionPrivText','postalCodePrivText','cityPrivText','countryPrivText'])
+
+        newContactInfoReg = contactInfoReg(oldContactInfoReg.nameText+'new', oldContactInfoReg.lastNameText+'new', oldContactInfoReg.companyText+'new', oldContactInfoReg.companyUnitText, oldContactInfoReg.phoneNumberText, oldContactInfoReg.cellPhoneNumberText, oldContactInfoReg.faxText, oldContactInfoReg.privatePhoneNumberText, oldContactInfoReg.privCellPhoneNumberText, oldContactInfoReg.privateFaxText, oldContactInfoReg.emailText, oldContactInfoReg.privateEmailText, oldContactInfoReg.websiteText, oldContactInfoReg.streetCompanyText, oldContactInfoReg.regionCompanyText, oldContactInfoReg.postalCodeCompanyText, oldContactInfoReg.cityCompanyText+'new', oldContactInfoReg.countryCompanyText, oldContactInfoReg.streetPrivText, oldContactInfoReg.regionPrivText, oldContactInfoReg.postalCodePrivText, oldContactInfoReg.cityPrivText, oldContactInfoReg.countryPrivText)
+
+        # set the contact info with new info
+        addressbookModule.setContactInfo(driver,timeout,contactInfoRowPath,newContactInfoReg)
+
+        contactInfoRow = driver.find_element_by_xpath(contactInfoRowPath)
+
+        if ((oldContactInfoReg.nameText + ' ' +  oldContactInfoReg.lastNameText) == contactInfoRow.find_element_by_xpath("//div[contains(@class,'x-grid3-cell-inner') and contains(@class,'x-grid3-col-n_fileas')]").text):
+            raise Exception(u"Nome não atualizado")
+
+        if (oldContactInfoReg.companyText == contactInfoRow.find_element_by_xpath("//div[contains(@class,'x-grid3-cell-inner') and contains(@class,'x-grid3-col-org_name')]").text):
+            raise Exception(u"Empresa não atualizada")
+
+        if (oldContactInfoReg.cityCompanyText == contactInfoRow.find_element_by_xpath("//div[contains(@class,'x-grid3-cell-inner') and contains(@class,'x-grid3-col-adr_one_locality')]").text):
+            raise Exception(u"Localidade da empresa não atualizada")
+
+        logger.save('CTV3_192',u'Editar informações do contato','True')
+
+    except Exception as err:
+        logger.save('CTV3_192',u'Editar informações do contato',str(type(err))+str(err))        
+
+    finally:
+        driver.quit()
+
 

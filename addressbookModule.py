@@ -273,6 +273,8 @@ def selectContact(driver,timeout):
         driver.find_element_by_xpath(path).click()
         return "//div[2]/div/div/div/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/table/tbody/tr[1]"
 
+######################################
+# Recupera os dados do contato representado na linha informada
 def getContactInfo(driver,timeout,contactInfoRowPath):
     contactInfoRow = driver.find_element_by_xpath(contactInfoRowPath)
 
@@ -308,6 +310,146 @@ def getContactInfo(driver,timeout,contactInfoRowPath):
     driver.switch_to_window(driver.window_handles[0])
 
     return reg
+
+######################################
+# Atualiza os dados do contato representado na linha informada a partir do registro informado
+def setContactInfo(driver,timeout,contactInfoRowPath,contactInfoReg):
+
+    contactInfoRow = driver.find_element_by_xpath(contactInfoRowPath)
+    dc = ActionChains(driver).double_click(contactInfoRow)
+    dc.perform()
+
+    # wait for "Editar Contato" window
+    WebDriverWait(driver,timeout).until( lambda driver: len(driver.window_handles) == 2 )
+
+    addContactWindow = driver.window_handles[-1]
+
+    driver.switch_to_window(addContactWindow)
+    WebDriverWait(driver,timeout).until(EC.title_contains('Editar Contato'))
+
+    webEl = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.streetCompanyText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.regionCompanyText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.regionCompanyText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.cityCompanyText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[1]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[1]/div/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.countryCompanyText)
+    webEl.send_keys(Keys.ENTER)
+
+    driver.find_element_by_xpath("//div/div[1]/div[1]/div[1]/ul/li[2]/a[2]/em/span/span").click()
+
+    webEl = driver.find_element_by_xpath("//fieldset[1]/div/div/div[1]/div/div/div/div[1]/div/div/div[2]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.nameText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[1]/div/div/div[1]/div/div/div/div[1]/div/div/div[2]/div/div/div/div[3]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.lastNameText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[1]/div/div/div[1]/div/div/div/div[1]/div/div/div[3]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.companyText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[1]/div/div/div[1]/div/div/div/div[1]/div/div/div[3]/div/div/div/div[2]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.companyUnitText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[1]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.phoneNumberText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[1]/div/div/div/div[2]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.cellPhoneNumberText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[1]/div/div/div/div[3]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.faxText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[2]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.privatePhoneNumberText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.privCellPhoneNumberText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.privateFaxText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[3]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.emailText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[3]/div/div/div/div[2]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.privateEmailText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//fieldset[2]/div/div/div/div/div/div[3]/div/div/div/div[3]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.websiteText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.streetPrivText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[1]/div/div/div/div[3]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.regionPrivText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[1]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.postalCodePrivText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.cityPrivText)
+    webEl.send_keys(Keys.ENTER)
+
+    webEl = driver.find_element_by_xpath("//div[2]/div[2]/div[1]/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[1]/div/input")
+    webEl.clear()
+    webEl.send_keys(contactInfoReg.countryPrivText)
+    webEl.send_keys(Keys.ENTER)
+
+    OkBtnPath = "//td[2]/table/tbody/tr/td[1]/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/em/button"
+    WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH,OkBtnPath)))
+    driver.find_element_by_xpath(OkBtnPath).click()
+
+    WebDriverWait(driver, timeout).until( lambda driver: addContactWindow not in driver.window_handles)
+    driver.switch_to_window(driver.window_handles[0])
 
 
 ######################################
