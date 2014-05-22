@@ -316,8 +316,9 @@ def getContactInfo(driver,timeout,contactInfoRowPath):
 def setContactInfo(driver,timeout,contactInfoRowPath,contactInfoReg):
 
     contactInfoRow = driver.find_element_by_xpath(contactInfoRowPath)
-    dc = ActionChains(driver).double_click(contactInfoRow)
-    dc.perform()
+
+    # click in the edit button
+    driver.find_element_by_xpath("//div[2]/table/tbody/tr/td[1]/table/tbody/tr/td/div/div[2]/div[1]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/em/button").click()
 
     # wait for "Editar Contato" window
     WebDriverWait(driver,timeout).until( lambda driver: len(driver.window_handles) == 2 )
