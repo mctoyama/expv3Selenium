@@ -29,9 +29,9 @@ import collections
 #############################################################
 # all tests for this module
 def allTests(mainCfg,logger):
-#    CTV3_179(mainCfg,logger)
-#    CTV3_178(mainCfg,logger)
-#    CTV3_180(mainCfg,logger)
+    CTV3_179(mainCfg,logger)
+    CTV3_178(mainCfg,logger)
+    CTV3_180(mainCfg,logger)
     CTV3_192(mainCfg,logger)
 
 
