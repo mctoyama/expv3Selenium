@@ -154,7 +154,100 @@ def clickDelete(mainCfg,driver,summary):
     else:
         return set(summaryList) != set(listEvents(mainCfg,driver))
     
-
 #############################################################
+def createCalendar(mainCfg,driver,calendarName):
+    
+    # expand "TODOS Calendários"
+    expandPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,expandPath)))
+    expandEl = driver.find_element_by_xpath(expandPath)
+    
+    if not expandEl.is_displayed():
+        
+        expandPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]'
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,expandPath)))
+        driver.find_element_by_xpath(expandPath).click()
+        time.sleep(1)
+
+    # expand Calendários pessoais
+    try:
+        
+        flag = False
+
+        expandPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/ul/li/ul/li[1]/ul/li/div/a'
+        WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,expandPath)))
+        expandEl = driver.find_element_by_xpath(expandPath)
+
+    except selenium.common.exceptions.TimeoutException as err:
+        flag = True
+
+    finally:
+        if flag or not expandEl.is_displayed():
+            expandPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/ul/li/ul/li[1]/div/img[1]'
+            WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,expandPath)))
+            driver.find_element_by_xpath(expandPath).click()
+            time.sleep(1)
+        
+    # right / context mouse click
+    calendarFolderPath = '//html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div/div[2]/div[2]/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div/ul/li/ul/li[1]/div/img[1]'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,calendarFolderPath)))
+    el = driver.find_element_by_xpath(calendarFolderPath)
+
+    action = selenium.webdriver.common.action_chains.ActionChains(driver)
+    action.context_click( el )
+    action.perform()
+
+    # click new calendar
+    newCalendarPath = '//div/ul/li/a/span'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_all_elements_located((By.XPATH,newCalendarPath)))
+
+    found = False
+
+    for i in driver.find_elements_by_xpath(newCalendarPath):
+        if i.text == u'Adicionar Calendário':
+            found = True
+            i.click()
+            break
+
+    if not found:
+        raise Exception(u"Não foi possível encontrar o botão para adicionar contatos")
+
+    # input calendar name
+    inputPath = '//div[2]/div/input'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,inputPath)))
+    inputCalendar = driver.find_element_by_xpath(inputPath)
+    inputCalendar.send_keys(calendarName)
+
+    # ok button
+    okPath = '//div[2]/div/div/div/div/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,okPath)))
+    driver.find_element_by_xpath(okPath).click()
+
+    # waits for page reload - creating calendar
+    waitPath = '//div/div/div/div/div/span'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_all_elements_located((By.XPATH,waitPath)))
+
+    found = False
+
+    for i in driver.find_elements_by_xpath(waitPath):
+        if i.text == u"Criando Calendário":
+            found = True
+            break
+
+    if found:
+        WebDriverWait(driver, mainCfg['timeout']).until_not(EC.visibility_of(i))
+
+    # checks if calendar is created
+    calendarListPath = '//ul/li/ul/li/ul/li/div/a/span'
+    WebDriverWait(driver, mainCfg['timeout']).until(EC.presence_of_all_elements_located((By.XPATH,calendarListPath)))
+
+    for i in driver.find_elements_by_xpath(calendarListPath):
+        if i.text == calendarName:
+            # if calendar is found
+            return True
+
+    # if calendar is not found
+    raise Exception(u"Calendário: "+calendarname+" não encontrado")
+
 #############################################################
 #############################################################

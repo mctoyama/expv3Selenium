@@ -123,7 +123,6 @@ def accessModule(mainCfg,driver,moduleIDText):
     driver.find_element_by_xpath(modulesOptionPath).click()
 
     # Find the menu with the options
-#    modulesMenuPath = '//html/body/div[27]/ul/div/div[1]'
     modulesMenuPath = '//ul/div/div/ul'
     WebDriverWait(driver, mainCfg['timeout']).until(EC.visibility_of_element_located((By.XPATH,modulesMenuPath)))
     modulesMenu = driver.find_element_by_xpath(modulesMenuPath)
@@ -147,5 +146,3 @@ def accessModule(mainCfg,driver,moduleIDText):
     # center panel - bottom
     sectionPath = ' html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[2]'
     WebDriverWait(driver,mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
-
-

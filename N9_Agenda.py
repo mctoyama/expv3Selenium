@@ -30,6 +30,7 @@ import calendarModule
 # all tests for this module
 def allTests(mainCfg,logger):
     CTV3_189(mainCfg,logger)
+    CTV3_194(mainCfg,logger)
 
 #############################################################
 #CTV3-189:F13-Permitir criação de agendamento por tipo pessoal
@@ -46,8 +47,6 @@ def CTV3_189(mainCfg,logger):
 
         # access calendar module
         aux.accessModule(mainCfg,driver,u"Calendário")
-
-        time.sleep(mainCfg['timeout'])
 
         # checking if event already exists
         while(msg['SUMMARY'] in calendarModule.listEvents(mainCfg,driver)):
@@ -74,5 +73,30 @@ def CTV3_189(mainCfg,logger):
     finally:
         driver.quit()
 
+#############################################################
+# CTV3-194:F32-Permitir criar calendários pessoais
+
+def CTV3_194(mainCfg,logger):
+
+    try:
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver(mainCfg)
+
+        aux.login(mainCfg,driver)
+
+        msg = cfgDB.getDict('CTV3_194_param.xml')
+
+        # access calendar module
+        aux.accessModule(mainCfg,driver,u"Calendário")
+
+        calendarModule.createCalendar(mainCfg,driver,msg['CalendarName'])
+
+        logger.save('CTV3_194',u'Permitir criar calendários pessoais','True')        
+
+    except Exception as err:
+        logger.save('CTV3_194',u'Permitir criar calendários pessoais',unicode(type(err))+unicode(err))
+
+    finally:
+        driver.quit()
 
 #############################################################
