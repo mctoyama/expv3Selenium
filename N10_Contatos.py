@@ -121,7 +121,7 @@ def CTV3_180(mainCfg,logger):
         logger.save('CTV3_180',u'Visualizar informações do contato','True')
 
     except Exception as err:
-        logger.save('CTV3_180',u'Visualizar informações do contato',str(type(err))+str(err))        
+        logger.save('CTV3_180',u'Visualizar informações do contato',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
@@ -168,7 +168,7 @@ def CTV3_192(mainCfg,logger):
         logger.save('CTV3_192',u'Editar informações do contato','True')
 
     except Exception as err:
-        logger.save('CTV3_192',u'Editar informações do contato',str(type(err))+str(err))        
+        logger.save('CTV3_192',u'Editar informações do contato',unicode(type(err))+unicode(err))        
 
     finally:
         driver.quit()
