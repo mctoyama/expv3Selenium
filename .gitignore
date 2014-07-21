@@ -1,5 +1,6 @@
 *.py[cod]
 *~
+*.txt
 
 # debug file
 debug.py
