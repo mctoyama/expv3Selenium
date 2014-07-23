@@ -13,10 +13,7 @@ import cfgDB
 import aux
 import report
 
-import N1_Autenticacao
-import N4_Mensagens_de_email
-import N9_Agenda
-import N10_Contatos
+import aux
 
 def send_command(s,cmd):
     s.sendline(cmd)
@@ -36,7 +33,7 @@ def connect(host,user,password,myport):
 def main():
 
     # getting option parser
-    parser = optparse.OptionParser("usage python performanceTests.py -h <hostname> -u <username> -p <password> --sshport <ssh port - default 22> -m <target module: (expressoMail,...)>",add_help_option=False)
+    parser = optparse.OptionParser("usage python performanceTests.py -h <hostname> -u <username> -p <password> --sshport <ssh port - default 22> -m <target module: (expressoMail,addressBook,...)>",add_help_option=False)
 
     parser.add_option("-h", dest='tgHostname', type="string", help="specify the hostname for the SSH client")    
     parser.add_option("-u", dest='tgUsername', type="string", help="specify the username for the SSH client")    
@@ -145,7 +142,27 @@ def main():
 
         print("Running expressoMail")
 
-        N1_Autenticacao.CTV3_1(mainCfg,logger)
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver(mainCfg)
+
+        aux.login(mainCfg,driver)
+
+        driver.quit()
+
+    elif options.tgModule == "addressBook":
+
+        print("Running adressBook")
+        
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver(mainCfg)
+
+        aux.login(mainCfg,driver)
+
+        selectedModuleText = 'Catálogos de Endereços'
+
+        aux.accessModule(mainCfg,driver,selectedModuleText)
+
+        driver.quit()
 
     else:
         print parser.usage
