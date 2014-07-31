@@ -11,9 +11,6 @@ import re
 
 import cfgDB
 import aux
-import report
-
-import aux
 
 def send_command(s,cmd):
     s.sendline(cmd)
@@ -136,8 +133,6 @@ def main():
 
     mainCfg = cfgDB.getDict('main.xml')
 
-    logger = report.Logger()
-
     if options.tgModule == 'expressoMail':
 
         print("Running expressoMail")
@@ -167,9 +162,6 @@ def main():
     else:
         print parser.usage
 
-    # closing selenium log
-    logger.close()
-
     # It gets the results from log files
 
     print("Generating report from logs...")
@@ -195,7 +187,7 @@ def main():
     send_command(s, "for i in $(cat /var/log/syslog | grep 127.0.0.1 | awk '{print $3}'); do cat /var/log/syslog | grep $i; done | grep 'MOD' | awk '{print $8}'|wc -l >>/data/resultPSQL-"+current+".txt")
     send_command(s, "echo '***************************************************' >>/data/resultPSQL-"+current+".txt")
     send_command(s, "echo 'IMAPD' >>/data/resultPSQL-"+current+".txt")
-    send_command(s, "cat /tmp/strace.cyrus.imapd.log | grep 'TAG' | awk '{print $4}' | sort | uniq -c | sort -k 1 -n >>/data/resultPSQL-"+current+".txt")
+    send_command(s, "cat /tmp/strace.cyrus.imapd.log | grep -a --text 'TAG' | awk '{print $4}' | sort | uniq -c | sort -k 1 -n >>/data/resultPSQL-"+current+".txt")
 
     # cleaning
     s.logout()
@@ -203,7 +195,7 @@ def main():
     # It gets report from server
     call('sshpass -p "'+options.tgPassword+'" scp -P '+str(options.tgPort)+' '+options.tgUsername+'@'+options.tgHostname+':/data/resultPSQL-'+current+'.txt ./Count-LDAP-IMAP-PSQL',shell=True)
 
-    print("Copying report to ./Count-LDAP-IMAP-PSQL/resultPSQL-"+current+".tx - OK")
+    print("Copying report to ./Count-LDAP-IMAP-PSQL/resultPSQL-"+current+".txt - OK")
 
     print("Goodbye!")
 

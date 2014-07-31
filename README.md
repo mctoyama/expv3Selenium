@@ -12,6 +12,9 @@ Tools used for selenium
 
 * http://docs.seleniumhq.org/
 
+sudo apt-get install python-pip
+sudo pip install selenium
+
 =============
 
 Demo for ExpressoV3
@@ -37,6 +40,7 @@ Added performance tests for ExpressoV3
 
 REQUISITS
 sudo apt-get install python-pexpect
+sudo apt-get install sshpass
 
 running:
 python performanceTests.py -h <expressov3 host> -u <root user> -p <root passwd> --sshport <ssh port> -m <module>
