@@ -23,8 +23,8 @@ def connect(host,user,password,myport):
         s = pxssh.pxssh()
         s.login(host,user,password,port=myport)
         return s
-    except:
-        print '[-] Error connecting'
+    except Exception as err:
+        print '[-] Error connecting - ' + str(err)
         exit(0)
 
 def main():
@@ -75,33 +75,33 @@ def main():
     # log_line_prefix = '%t [%p]: [%l-1] user=postgres,db=%d '
     # log_statement = 'all'
 
-    ret = send_command(s, "cat /etc/postgresql/9.1/main/postgresql.conf")
+    ret = send_command(s, "cat /etc/postgresql/9.4/main/postgresql.conf")
 
-    if not re.search("^(log_directory = '/data')(\s*#.*\s*)$", ret, re.MULTILINE):
-        print("/etc/postgresql/9.1/main/postgresql.conf missing line: log_directory = '/data'")
+    if not re.search("^(log_directory = '/data/')(\s*#.*\s*)$", ret, re.MULTILINE):
+        print("/etc/postgresql/9.4/main/postgresql.conf missing line: log_directory = '/data'")
         return 1
 
     if not re.search("^(log_filename = 'postgresql-%Y-%m-%d.log')(\s*#.*\s*)$", ret, re.MULTILINE):
-        print("/etc/postgresql/9.1/main/postgresql.conf missing line: log_filename = 'postgresql-%Y-%m-%d.log'")
+        print("/etc/postgresql/9.4/main/postgresql.conf missing line: log_filename = 'postgresql-%Y-%m-%d.log'")
         return 1
 
     if not re.search("^(debug_pretty_print = on)(\s*#.*\s*)$", ret, re.MULTILINE):
-        print("/etc/postgresql/9.1/main/postgresql.conf missing line: debug_pretty_print = on")
+        print("/etc/postgresql/9.4/main/postgresql.conf missing line: debug_pretty_print = on")
         return 1
 
     if not re.search("^(log_duration = on)(\s*#.*\s*)$", ret, re.MULTILINE):
-        print("/etc/postgresql/9.1/main/postgresql.conf missing line: log_duration = on")
+        print("/etc/postgresql/9.4/main/postgresql.conf missing line: log_duration = on")
         return 1
 
     if not re.search("^(log_line_prefix = '%t \[%p\]: \[%l-1\] user=postgres,db=%d ')(\s*#.*\s*)$", ret, re.MULTILINE):
-        print("/etc/postgresql/9.1/main/postgresql.conf missing line: log_line_prefix = '%t [%p]: [%l-1] user=postgres,db=%d '")
+        print("/etc/postgresql/9.4/main/postgresql.conf missing line: log_line_prefix = '%t [%p]: [%l-1] user=postgres,db=%d '")
         return 1
 
     if not re.search("^(log_statement = 'all')(\s*#.*\s*)$", ret, re.MULTILINE):
-        print("/etc/postgresql/9.1/main/postgresql.conf missing line: log_statement = 'all'")
+        print("/etc/postgresql/9.4/main/postgresql.conf missing line: log_statement = 'all'")
         return 1
 
-    print("/etc/postgresql/9.1/main/postgresql.conf - OK")
+    print("/etc/postgresql/9.4/main/postgresql.conf - OK")
 
     # slapd.conf
     # loglevel 256
