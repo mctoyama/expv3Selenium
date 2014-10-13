@@ -118,7 +118,8 @@ def createWebDriver(mainCfg):
 # function that provide access to a Module of ExpressoV3 given its identification text
 def accessModule(mainCfg,driver,moduleIDText):
     # Wait for span (with the access to the modules of ExpressoV3) to be clickable
-    modulesOptionPath = 'html/body/div[1]/div[3]/div/div/div/div[3]/div/div/div/div[1]/div[1]/ul/li[1]/a[2]/em/span'
+
+    modulesOptionPath = 'html/body/div[1]/div[2]/div/div/div/div[3]/div/div/div/div[1]/div[1]/ul/li[1]/a[1]'
     WebDriverWait(driver, mainCfg['timeout']).until(EC.element_to_be_clickable((By.XPATH,modulesOptionPath)))
     driver.find_element_by_xpath(modulesOptionPath).click()
 
@@ -136,13 +137,15 @@ def accessModule(mainCfg,driver,moduleIDText):
 
     # Verify if all the 3 sections are visible
     # west panel
-    sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[3]/div'
+    sectionPath = 'html/body/div[1]/div[2]/div/div/div/div[4]/div/div/div[3]/div/div[2]'
     WebDriverWait(driver,mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
 
     # center panel - top
-    sectionPath = 'html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[1]'
+    sectionPath = 'html/body/div[1]/div[2]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div/div[1]/div[2]'
     WebDriverWait(driver,mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
 
     # center panel - bottom
-    sectionPath = ' html/body/div[1]/div[3]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[2]'
+    sectionPath = 'html/body/div[1]/div[2]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[2]/div/div/div/div/div/div[1]/div/div'
     WebDriverWait(driver,mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
+
+    print "debug 00"
