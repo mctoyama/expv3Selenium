@@ -141,11 +141,11 @@ def accessModule(mainCfg,driver,moduleIDText):
     WebDriverWait(driver,mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
 
     # center panel - top
-    sectionPath = 'html/body/div[1]/div[2]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div/div[1]/div[2]'
+    sectionPath = 'html/body/div[1]/div[2]/div/div/div/div[4]/div/div/div[2]/div/div/div'
     WebDriverWait(driver,mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
 
     # center panel - bottom
-    sectionPath = 'html/body/div[1]/div[2]/div/div/div/div[4]/div/div/div[2]/div/div/div[2]/div/div/div[2]/div/div/div/div/div/div[1]/div/div'
+    sectionPath = 'html/body/div[1]/div[2]/div/div/div/div[4]/div/div/div[2]/div/div/div'
     WebDriverWait(driver,mainCfg['timeout']).until(EC.presence_of_element_located((By.XPATH,sectionPath)))
 
     print "debug 00"

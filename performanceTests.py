@@ -30,7 +30,7 @@ def connect(host,user,password,myport):
 def main():
 
     # getting option parser
-    parser = optparse.OptionParser("usage python performanceTests.py -h <hostname> -u <username> -p <password> --sshport <ssh port - default 22> -m <target module: (expressoMail,addressBook,...)>",add_help_option=False)
+    parser = optparse.OptionParser("usage python performanceTests.py -h <hostname> -u <username> -p <password> --sshport <ssh port - default 22> -m <target module: (expressoMail,addressBook, calendar,...)>",add_help_option=False)
 
     parser.add_option("-h", dest='tgHostname', type="string", help="specify the hostname for the SSH client")    
     parser.add_option("-u", dest='tgUsername', type="string", help="specify the username for the SSH client")    
@@ -142,6 +142,10 @@ def main():
 
         aux.login(mainCfg,driver)
 
+        selectedModuleText = 'Email'
+
+        aux.accessModule(mainCfg,driver,selectedModuleText)
+
         driver.quit()
 
     elif options.tgModule == "addressBook":
@@ -154,6 +158,21 @@ def main():
         aux.login(mainCfg,driver)
 
         selectedModuleText = 'Catálogos de Endereços'
+
+        aux.accessModule(mainCfg,driver,selectedModuleText)
+
+        driver.quit()
+
+    elif options.tgModule == "calendar" :
+
+        print("Running calendar")
+
+        # Create a new instance of the webdriver        
+        driver = aux.createWebDriver(mainCfg)
+
+        aux.login(mainCfg,driver)
+
+        selectedModuleText = 'Calendário'
 
         aux.accessModule(mainCfg,driver,selectedModuleText)
 
